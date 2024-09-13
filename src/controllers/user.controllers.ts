@@ -1,20 +1,15 @@
-import fs from "node:fs/promises";
-
 import { NextFunction, Request, Response } from "express";
-import path from "path";
 
 import { IUser } from "../interfaces/IUser";
+import { read, write } from "../services/fs.service";
 import { users } from "../users_array";
 
 class UserController {
   public async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
       res.json(users); // Відправляємо масив користувачів у відповідь
-      await fs.writeFile(
-        path.join(process.cwd(), "users.json"),
-        JSON.stringify(users, null, 2),
-      ); // Записуємо користувачів у файл
-      await fs.readFile(path.join(process.cwd(), "users.json"), "utf-8"); // зчитуємо одразу в норм форматі utf-8
+      await write(users); // Записуємо користувачів у файл
+      await read(); // зчитуємо одразу в норм форматі utf-8
       res.status(201);
     } catch (e) {
       next(e);
@@ -31,10 +26,7 @@ class UserController {
       const id = users[users.length - 1].id + 1; // Генеруємо новий id для користувача
       const newUser: IUser = { id, name, age, status };
       users.push(newUser);
-      await fs.writeFile(
-        path.join(process.cwd(), "users.json"),
-        JSON.stringify(users, null, 2),
-      );
+      await write(users);
       res.status(201).json(newUser); // Повертаємо новоствореного користувача у відповідь
     } catch (e) {
       next(e);
@@ -73,10 +65,7 @@ class UserController {
       }
       const { name, age, status } = req.body;
       users[userIndex] = { ...users[userIndex], name, age, status }; // через спред перезатираємо користувача, тобто створюємо нове посилання на користувача з оновленими данними
-      await fs.writeFile(
-        path.join(process.cwd(), "users.json"),
-        JSON.stringify(users, null, 2),
-      );
+      await write(users);
       res.status(201).json(users[userIndex]); // Повертаємо оновленого користувача у відповідь
     } catch (e) {
       next(e);
@@ -96,10 +85,7 @@ class UserController {
         return;
       }
       users.splice(userIndex, 1);
-      await fs.writeFile(
-        path.join(process.cwd(), "users.json"),
-        JSON.stringify(users, null, 2),
-      );
+      await write(users);
       res.sendStatus(204); // Відправляємо успішну відповідь
     } catch (e) {
       next(e);
