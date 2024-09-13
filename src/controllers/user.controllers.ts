@@ -9,12 +9,12 @@ import { users } from "../users_array";
 class UserController {
   public async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      res.json(users); // Повертаємо користувачів у відповідь
+      res.json(users); // Відправляємо масив користувачів у відповідь
       await fs.writeFile(
         path.join(process.cwd(), "users.json"),
         JSON.stringify(users, null, 2),
-      );
-      await fs.readFile(path.join(process.cwd(), "users.json"), "utf-8");
+      ); // Записуємо користувачів у файл
+      await fs.readFile(path.join(process.cwd(), "users.json"), "utf-8"); // зчитуємо одразу в норм форматі utf-8
       res.status(201);
     } catch (e) {
       next(e);
@@ -28,7 +28,7 @@ class UserController {
   ): Promise<void> {
     try {
       const { name, age, status } = req.body;
-      const id = users[users.length - 1].id + 1;
+      const id = users[users.length - 1].id + 1; // Генеруємо новий id для користувача
       const newUser: IUser = { id, name, age, status };
       users.push(newUser);
       await fs.writeFile(
@@ -72,7 +72,7 @@ class UserController {
         return;
       }
       const { name, age, status } = req.body;
-      users[userIndex] = { ...users[userIndex], name, age, status };
+      users[userIndex] = { ...users[userIndex], name, age, status }; // через спред перезатираємо користувача, тобто створюємо нове посилання на користувача з оновленими данними
       await fs.writeFile(
         path.join(process.cwd(), "users.json"),
         JSON.stringify(users, null, 2),
@@ -100,7 +100,7 @@ class UserController {
         path.join(process.cwd(), "users.json"),
         JSON.stringify(users, null, 2),
       );
-      res.sendStatus(204); // Відправляємо успішну відповідь без тіла
+      res.sendStatus(204); // Відправляємо успішну відповідь
     } catch (e) {
       next(e);
     }
