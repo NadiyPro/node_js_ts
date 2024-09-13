@@ -50,7 +50,7 @@ app.get(
       const user = users.find((user) => user.id === userId);
       res.json(user); // Повертаємо користувача у відповідь
     } catch (e) {
-      res.status(500).send(e.message);
+      next(e);
     }
   },
 );
@@ -74,7 +74,7 @@ app.post(
       );
       res.status(201).json(newUser); // Повертаємо новоствореного користувача у відповідь
     } catch (e) {
-      res.status(500).send(e.message);
+      next(e);
     }
   },
 );
@@ -102,7 +102,7 @@ app.put(
       );
       res.status(201).json(users[userIndex]); // Повертаємо оновленого користувача у відповідь
     } catch (e) {
-      res.status(500).send(e.message);
+      next(e);
     }
   },
 );
@@ -125,11 +125,20 @@ app.delete(
       );
       res.sendStatus(204); // Відправляємо успішну відповідь без тіла
     } catch (e) {
-      res.status(500).send(e.message);
+      next(e);
     }
   },
 );
-
+//обробка помилок які ми витягнули сюди (на верхній рівень) через next(e)
+app.use("*", (error: Error, req: Request, res: Response) => {
+  res.status(500).send(error.message);
+});
+// app.use(
+//     "*",
+//     (error: ApiError, req: Request, res: Response, next: NextFunction) => {
+//       res.status(error.status || 500).send(error.message);
+//     },
+// );
 // на якому порті відкриваємо (номер хосту)
 const PORT = 3001;
 app.listen(PORT, () => {
