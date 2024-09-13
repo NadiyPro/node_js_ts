@@ -4,6 +4,7 @@ import express, { NextFunction, Request, Response } from "express";
 
 // import path from "path";
 import { ApiError } from "./api.error";
+import { userRouter } from "./router/router";
 // import { IUser } from "./interfaces/IUser";
 // import { users } from "./users_array";
 
@@ -11,6 +12,8 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/users", userRouter);
 
 // // Валідація полів
 // const validateUser = (name: string, age: number, status: boolean): boolean => {
