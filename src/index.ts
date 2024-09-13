@@ -131,9 +131,6 @@ app.delete(
   },
 );
 //обробка помилок які ми витягнули сюди (на верхній рівень) через next(e)
-// app.use("*", (error: Error, req: Request, res: Response) => {
-//   res.status(500).send(error.message);
-// });
 app.use(
   "*",
   (error: ApiError, req: Request, res: Response, next: NextFunction) => {
