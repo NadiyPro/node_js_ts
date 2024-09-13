@@ -12,7 +12,9 @@ class UserMiddleware {
     if (isValidName && isValidAge && isValidStatus) {
       next(); // Якщо дані валідні, переходимо далі в контролер
     } else {
-      res.status(400).send("Invalid user.Please check the correctness of the input data");
+      res
+        .status(400)
+        .send("Invalid user.Please check the correctness of the input data");
     }
   }
 }
