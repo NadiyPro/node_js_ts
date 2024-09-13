@@ -1,12 +1,7 @@
-// import fs from "node:fs/promises";
-
 import express, { NextFunction, Request, Response } from "express";
 
-// import path from "path";
 import { ApiError } from "./api.error";
 import { userRouter } from "./router/router";
-// import { IUser } from "./interfaces/IUser";
-// import { users } from "./users_array";
 
 const app = express();
 
