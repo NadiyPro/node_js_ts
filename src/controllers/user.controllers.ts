@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { IUser } from "../interfaces/IUser";
+import { userMiddleware } from "../middleware/user.middleware";
 import { read, write } from "../services/fs.service";
 import { users } from "../users_array";
 
@@ -40,12 +41,11 @@ class UserController {
   ): Promise<void> {
     try {
       const userId = Number(req.params.userId);
-      if (!userId) {
-        res.status(404).send("User not found");
-        return;
+      const user = userMiddleware.getUserId(userId, res);
+      if (!user) {
+        return; // якщо користувача з відхопленим userId немає, зупиняємо виконання і видаємо текст помилки з userMiddleware
       }
-      const user = users.find((user) => user.id === userId);
-      res.json(user); // Повертаємо користувача у відповідь
+      res.json(user);
     } catch (e) {
       next(e);
     }
