@@ -6,7 +6,7 @@ import { users } from "../users_array";
 class UserMiddleware {
   // Валідація даних користувача
   public validateUser(req: Request, res: Response, next: NextFunction) {
-    const {name, age, status} = req.body;
+    const { name, age, status } = req.body;
 
     const isValidName = typeof name === "string" && name.length <= 20;
     const isValidAge = typeof age === "number" && age > 0 && age <= 100;
@@ -16,8 +16,8 @@ class UserMiddleware {
       next(); // Якщо дані валідні, переходимо далі в контролер
     } else {
       res
-          .status(400)
-          .send("Invalid user.Please check the correctness of the input data");
+        .status(400)
+        .send("Invalid user.Please check the correctness of the input data");
     }
   }
 
