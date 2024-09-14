@@ -58,10 +58,9 @@ class UserController {
   ): Promise<void> {
     try {
       const userId = Number(req.params.userId);
-      const userIndex = users.findIndex((user) => user.id === userId);
-      if (userIndex === -1) {
-        res.status(404).send("User not found");
-        return;
+      const userIndex = userMiddleware.updateUser(userId, res);
+      if (!userIndex) {
+        return; // якщо користувача з зазначеним індексом userIndex немає, зупиняємо виконання і видаємо текст помилки з userMiddleware
       }
       const { name, age, status } = req.body;
       users[userIndex] = { ...users[userIndex], name, age, status }; // через спред перезатираємо користувача, тобто створюємо нове посилання на користувача з оновленими данними
