@@ -39,6 +39,15 @@ class UserMiddleware {
     }
     return userIndex;
   }
+
+  public deleteUser(userId: number, res: Response): number | undefined {
+    const userIndex = users.findIndex((user) => user.id === userId);
+    if (userIndex === -1) {
+      res.status(404).send("User not found");
+      return undefined;
+    }
+    return userIndex;
+  }
 }
 
 export const userMiddleware = new UserMiddleware();

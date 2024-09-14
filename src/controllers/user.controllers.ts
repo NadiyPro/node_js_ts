@@ -65,7 +65,7 @@ class UserController {
       const { name, age, status } = req.body;
       users[userIndex] = { ...users[userIndex], name, age, status }; // через спред перезатираємо користувача, тобто створюємо нове посилання на користувача з оновленими данними
       await write(users);
-      res.status(201).json(users[userIndex]); // Повертаємо оновленого користувача у відповідь
+      res.status(201).json(users[userIndex]); // повертаємо оновленого користувача у відповідь
     } catch (e) {
       next(e);
     }
@@ -78,9 +78,8 @@ class UserController {
   ): Promise<void> {
     try {
       const userId = Number(req.params.userId);
-      const userIndex = users.findIndex((user) => user.id === userId);
-      if (userIndex === -1) {
-        res.status(404).send("User not found");
+      const userIndex = userMiddleware.deleteUser(userId, res);
+      if (!userIndex) {
         return;
       }
       users.splice(userIndex, 1);
