@@ -32,14 +32,20 @@ class UserMiddleware {
     next();
   }
 
-  public updateUser(userId: number, res: Response): number | undefined {
+  public updateUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const userId = Number(req.params.userId);
     const userIndex = users.findIndex((user) => user.id === userId);
 
     if (userIndex === -1) {
       res.status(404).send("User not found");
       return undefined;
     }
-    return userIndex;
+    (req as any).userIndex = userIndex;
+    next();
   }
 
   public deleteUser(userId: number, res: Response): number | undefined {

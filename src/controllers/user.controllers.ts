@@ -46,19 +46,13 @@ class UserController {
       next(e);
     }
   }
-
   public async updateUser(
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<void> {
     try {
-      const userId = Number(req.params.userId);
-      const userIndex = userMiddleware.updateUser(userId, res);
-
-      if (!userIndex) {
-        return; // якщо користувача з зазначеним індексом userIndex немає, зупиняємо виконання і видаємо текст помилки з userMiddleware
-      }
+      const userIndex = (req as any).userIndex;
       const { name, age, status } = req.body;
       users[userIndex] = { ...users[userIndex], name, age, status }; // через спред перезатираємо користувача, тобто створюємо нове посилання на користувача з оновленими данними
       await write(users);
@@ -67,6 +61,7 @@ class UserController {
       next(e);
     }
   }
+
 
   public async deleteUser(
     req: Request,
