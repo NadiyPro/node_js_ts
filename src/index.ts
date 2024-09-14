@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 
+import { ApiError } from "./errors/api.error";
 import { userRouter } from "./router/router";
-import { ApiError } from "./services/api.error";
 
 const app = express();
 
