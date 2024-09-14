@@ -3,8 +3,6 @@ import { Router } from "express";
 import { userController } from "../controllers/user.controllers";
 import { userMiddleware } from "../middleware/user.middleware";
 
-// import { userController } from "../controllers/user.controller";
-
 const router = Router();
 
 router.get("/", userController.getUsers);
