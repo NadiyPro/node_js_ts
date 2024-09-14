@@ -62,7 +62,6 @@ class UserController {
     }
   }
 
-
   public async deleteUser(
     req: Request,
     res: Response,
