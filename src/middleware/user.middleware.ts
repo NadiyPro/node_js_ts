@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-// import { IUser } from "../interfaces/IUser";
-// import { IUser } from "../interfaces/IUser";
+import { IUser } from "../interfaces/IUser";
 import { users } from "../users_array";
 
 class UserMiddleware {
@@ -24,13 +23,11 @@ class UserMiddleware {
 
   public getUserId(req: Request, res: Response, next: NextFunction) {
     const userId = Number(req.params.userId);
-    const user = users.find((user) => user.id === userId);
+    const user: IUser = users.find((user) => user.id === userId);
 
     if (!user) {
       return res.status(404).send("User not found");
     }
-
-    // Зберігаємо користувача в req як any
     (req as any).user = user;
     next();
   }
