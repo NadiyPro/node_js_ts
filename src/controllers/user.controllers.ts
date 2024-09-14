@@ -40,12 +40,8 @@ class UserController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const userId = Number(req.params.userId);
-      const user = userMiddleware.getUserId(userId, res);
-      if (!user) {
-        return; // якщо користувача з відхопленим userId немає, зупиняємо виконання і видаємо текст помилки з userMiddleware
-      }
-      res.json(user);
+      const user = (req as any).user; // Доступ до користувача через req
+      res.json(user); // Відправляємо знайденого користувача у відповідь
     } catch (e) {
       next(e);
     }
@@ -59,6 +55,7 @@ class UserController {
     try {
       const userId = Number(req.params.userId);
       const userIndex = userMiddleware.updateUser(userId, res);
+
       if (!userIndex) {
         return; // якщо користувача з зазначеним індексом userIndex немає, зупиняємо виконання і видаємо текст помилки з userMiddleware
       }
