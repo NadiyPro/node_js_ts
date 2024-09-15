@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import { IUser } from "../interfaces/IUser";
+// import { IUser } from "../interfaces/IUser";
 import { write } from "../services/fs.service";
 import { userService } from "../services/user.service";
 import { users } from "../users_array";
@@ -22,10 +22,7 @@ class UserController {
   ): Promise<void> {
     try {
       const { name, age, status } = req.body;
-      const id = users[users.length - 1].id + 1; // Генеруємо новий id для користувача
-      const newUser: IUser = { id, name, age, status };
-      users.push(newUser);
-      await write(users);
+      const newUser = await userService.postUser(name, age, status);
       res.status(201).json(newUser); // Повертаємо новоствореного користувача у відповідь
     } catch (e) {
       next(e);

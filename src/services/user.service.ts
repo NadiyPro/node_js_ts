@@ -1,6 +1,7 @@
 // import { NextFunction, Request, Response } from "express";
 
 // import { IUser } from "../interfaces/IUser";
+import { IUser } from "../interfaces/IUser";
 import { read, write } from "../services/fs.service";
 import { users } from "../users_array";
 
@@ -10,23 +11,14 @@ class UserService {
     await read(); // зчитуємо одразу в норм форматі utf-8
     return users;
   }
-  //
-  // public async postUser(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction,
-  // ): Promise<void> {
-  //   try {
-  //     const { name, age, status } = req.body;
-  //     const id = users[users.length - 1].id + 1; // Генеруємо новий id для користувача
-  //     const newUser: IUser = { id, name, age, status };
-  //     users.push(newUser);
-  //     await write(users);
-  //     res.status(201).json(newUser); // Повертаємо новоствореного користувача у відповідь
-  //   } catch (e) {
-  //     next(e);
-  //   }
-  // }
+
+  public async postUser(name, age, status): Promise<IUser> {
+    const id = users[users.length - 1].id + 1; // Генеруємо новий id для користувача
+    const newUser: IUser = { id, name, age, status };
+    users.push(newUser);
+    await write(users);
+    return newUser;
+  }
   //
   // public async getUserId(
   //   req: Request,
