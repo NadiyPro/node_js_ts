@@ -49,9 +49,13 @@ class UserController {
     try {
       const userIndex = (req as any).userIndex;
       const { name, age, status } = req.body;
-      users[userIndex] = { ...users[userIndex], name, age, status }; // через спред перезатираємо користувача, тобто створюємо нове посилання на користувача з оновленими данними
-      await write(users);
-      res.status(201).json(users[userIndex]); // повертаємо оновленого користувача у відповідь
+      const newUser = await userService.updateUser(
+        userIndex,
+        name,
+        age,
+        status,
+      );
+      res.status(201).json(newUser); // повертаємо оновленого користувача у відповідь
     } catch (e) {
       next(e);
     }

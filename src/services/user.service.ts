@@ -19,34 +19,12 @@ class UserService {
     await write(users);
     return newUser;
   }
-  //
-  // public async getUserId(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction,
-  // ): Promise<void> {
-  //   try {
-  //     const user = (req as any).user; // Доступ до користувача через req
-  //     res.json(user); // Відправляємо знайденого користувача у відповідь
-  //   } catch (e) {
-  //     next(e);
-  //   }
-  // }
-  // public async updateUser(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction,
-  // ): Promise<void> {
-  //   try {
-  //     const userIndex = (req as any).userIndex;
-  //     const { name, age, status } = req.body;
-  //     users[userIndex] = { ...users[userIndex], name, age, status }; // через спред перезатираємо користувача, тобто створюємо нове посилання на користувача з оновленими данними
-  //     await write(users);
-  //     res.status(201).json(users[userIndex]); // повертаємо оновленого користувача у відповідь
-  //   } catch (e) {
-  //     next(e);
-  //   }
-  // }
+
+  public async updateUser(userIndex, name, age, status): Promise<IUser> {
+    users[userIndex] = { ...users[userIndex], name, age, status }; // через спред перезатираємо користувача, тобто створюємо нове посилання на користувача з оновленими данними
+    await write(users);
+    return users[userIndex];
+  }
   //
   // public async deleteUser(
   //   req: Request,
