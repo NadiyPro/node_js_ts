@@ -1,6 +1,6 @@
 import { IUser } from "../interfaces/IUser";
-import { read, write } from "../services/fs.service";
 import { users } from "../users_array";
+import { read, write } from "./fs.service";
 
 class UserService {
   public async getUsers() {
@@ -9,7 +9,11 @@ class UserService {
     return users;
   }
 
-  public async postUser(name, age, status): Promise<IUser> {
+  public async postUser(
+    name: string,
+    age: number,
+    status: boolean,
+  ): Promise<IUser> {
     const id = users[users.length - 1].id + 1; // Генеруємо новий id для користувача
     const newUser: IUser = { id, name, age, status };
     users.push(newUser);
@@ -17,13 +21,18 @@ class UserService {
     return newUser;
   }
 
-  public async updateUser(userIndex, name, age, status): Promise<IUser> {
+  public async updateUser(
+    userIndex: number,
+    name: string,
+    age: number,
+    status: boolean,
+  ): Promise<IUser> {
     users[userIndex] = { ...users[userIndex], name, age, status }; // через спред перезатираємо користувача, тобто створюємо нове посилання на користувача з оновленими данними
     await write(users);
     return users[userIndex];
   }
 
-  public async deleteUser(userIndex): Promise<IUser[]> {
+  public async deleteUser(userIndex: number): Promise<IUser[]> {
     users.splice(userIndex, 1);
     await write(users);
     return users;
