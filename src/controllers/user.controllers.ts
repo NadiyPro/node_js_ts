@@ -1,16 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 
 import { IUser } from "../interfaces/IUser";
-import { read, write } from "../services/fs.service";
+import { write } from "../services/fs.service";
+import { userService } from "../services/user.service";
 import { users } from "../users_array";
 
 class UserController {
   public async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      res.json(users); // Відправляємо масив користувачів у відповідь
-      await write(users); // Записуємо користувачів у файл
-      await read(); // зчитуємо одразу в норм форматі utf-8
-      res.status(201);
+      const users = await userService.getUsers();
+      res.status(201).json(users);
     } catch (e) {
       next(e); // передаємо помилки на обробку на верхній рівень, тобто в index.ts
     }
