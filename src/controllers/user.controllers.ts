@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
 import { IUser } from "../interfaces/IUser";
-import { userMiddleware } from "../middleware/user.middleware";
 import { read, write } from "../services/fs.service";
 import { users } from "../users_array";
 
@@ -13,7 +12,7 @@ class UserController {
       await read(); // зчитуємо одразу в норм форматі utf-8
       res.status(201);
     } catch (e) {
-      next(e);
+      next(e); // передаємо помилки на обробку на верхній рівень, тобто в index.ts
     }
   }
 
@@ -68,14 +67,10 @@ class UserController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const userId = Number(req.params.userId);
-      const userIndex = userMiddleware.deleteUser(userId, res);
-      if (!userIndex) {
-        return;
-      }
+      const userIndex = (req as any).userIndex;
       users.splice(userIndex, 1);
       await write(users);
-      res.sendStatus(204); // Відправляємо успішну відповідь
+      res.sendStatus(204);
     } catch (e) {
       next(e);
     }

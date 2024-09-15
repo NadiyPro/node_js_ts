@@ -1,11 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 
+import { ApiError } from "../errors/api.error";
 import { IUser } from "../interfaces/IUser";
 import { users } from "../users_array";
 
 class UserMiddleware {
   // Валідація даних користувача
-  public validateUser(req: Request, res: Response, next: NextFunction) {
+  public async validateUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     const { name, age, status } = req.body;
 
     const isValidName = typeof name === "string" && name.length <= 20;
@@ -15,24 +20,29 @@ class UserMiddleware {
     if (isValidName && isValidAge && isValidStatus) {
       next(); // Якщо дані валідні, переходимо далі в контролер
     } else {
-      res
-        .status(400)
-        .send("Invalid user.Please check the correctness of the input data");
+      throw new ApiError(
+        "Invalid user. Please check the correctness of the input data",
+        400,
+      );
     }
   }
 
-  public getUserId(req: Request, res: Response, next: NextFunction) {
+  public async getUserId(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     const userId = Number(req.params.userId);
     const user: IUser = users.find((user) => user.id === userId);
 
     if (!user) {
-      return res.status(404).send("User not found");
+      throw new ApiError("User not found", 400);
     }
     (req as any).user = user;
-    next();
+    next(); // в разі успіху крокуємо далі, тобто йдемо в контролер
   }
 
-  public updateUser(
+  public async updateUser(
     req: Request,
     res: Response,
     next: NextFunction,
@@ -41,20 +51,25 @@ class UserMiddleware {
     const userIndex = users.findIndex((user) => user.id === userId);
 
     if (userIndex === -1) {
-      res.status(404).send("User not found");
-      return undefined;
+      throw new ApiError("User not found", 400);
     }
     (req as any).userIndex = userIndex;
     next();
   }
 
-  public deleteUser(userId: number, res: Response): number | undefined {
+  public async deleteUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const userId = Number(req.params.userId);
     const userIndex = users.findIndex((user) => user.id === userId);
+
     if (userIndex === -1) {
-      res.status(404).send("User not found");
-      return undefined;
+      throw new ApiError("User not found", 400);
     }
-    return userIndex;
+    (req as any).userIndex = userIndex;
+    next();
   }
 }
 
