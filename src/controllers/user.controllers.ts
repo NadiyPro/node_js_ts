@@ -1,9 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-// import { IUser } from "../interfaces/IUser";
-import { write } from "../services/fs.service";
 import { userService } from "../services/user.service";
-import { users } from "../users_array";
 
 class UserController {
   public async getUsers(req: Request, res: Response, next: NextFunction) {
@@ -68,8 +65,7 @@ class UserController {
   ): Promise<void> {
     try {
       const userIndex = (req as any).userIndex;
-      users.splice(userIndex, 1);
-      await write(users);
+      await userService.deleteUser(userIndex);
       res.sendStatus(204);
     } catch (e) {
       next(e);

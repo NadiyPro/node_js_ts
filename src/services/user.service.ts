@@ -1,6 +1,3 @@
-// import { NextFunction, Request, Response } from "express";
-
-// import { IUser } from "../interfaces/IUser";
 import { IUser } from "../interfaces/IUser";
 import { read, write } from "../services/fs.service";
 import { users } from "../users_array";
@@ -25,21 +22,12 @@ class UserService {
     await write(users);
     return users[userIndex];
   }
-  //
-  // public async deleteUser(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction,
-  // ): Promise<void> {
-  //   try {
-  //     const userIndex = (req as any).userIndex;
-  //     users.splice(userIndex, 1);
-  //     await write(users);
-  //     res.sendStatus(204);
-  //   } catch (e) {
-  //     next(e);
-  //   }
-  // }
+
+  public async deleteUser(userIndex): Promise<IUser[]> {
+    users.splice(userIndex, 1);
+    await write(users);
+    return users;
+  }
 }
 
 export const userService = new UserService();
