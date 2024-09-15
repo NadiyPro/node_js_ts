@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
 import { ApiError } from "../errors/api.error";
-import { IUser } from "../interfaces/IUser";
 import { users } from "../users_array";
 
 class UserMiddleware {
@@ -27,49 +26,21 @@ class UserMiddleware {
     }
   }
 
-  public async getUserId(
+  public async isUserExist(
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<void> {
     const userId = Number(req.params.userId);
-    const user: IUser = users.find((user) => user.id === userId);
+    const userIndex = users.findIndex((user) => user.id === userId);
 
-    if (!user) {
+    if (userIndex === -1) {
       throw new ApiError("User not found", 400);
     }
-    (req as any).user = user;
+
+    (req as any).user = users[userIndex]; // Зберігаємо користувача
+    (req as any).userIndex = userIndex; // Зберігаємо індекс користувача
     next(); // в разі успіху крокуємо далі, тобто йдемо в контролер
-  }
-
-  public async updateUser(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    const userId = Number(req.params.userId);
-    const userIndex = users.findIndex((user) => user.id === userId);
-
-    if (userIndex === -1) {
-      throw new ApiError("User not found", 400);
-    }
-    (req as any).userIndex = userIndex;
-    next();
-  }
-
-  public async deleteUser(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    const userId = Number(req.params.userId);
-    const userIndex = users.findIndex((user) => user.id === userId);
-
-    if (userIndex === -1) {
-      throw new ApiError("User not found", 400);
-    }
-    (req as any).userIndex = userIndex;
-    next();
   }
 }
 

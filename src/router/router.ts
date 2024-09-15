@@ -8,13 +8,17 @@ const router = Router();
 router.get("/", userController.getUsers);
 router.post("/", userMiddleware.validateUser, userController.postUser);
 
-router.get("/:userId", userMiddleware.getUserId, userController.getUserId);
+router.get("/:userId", userMiddleware.isUserExist, userController.getUserId);
 router.put(
   "/:userId",
   userMiddleware.validateUser,
-  userMiddleware.updateUser,
+  userMiddleware.isUserExist,
   userController.updateUser,
 );
-router.delete("/:userId", userMiddleware.deleteUser, userController.deleteUser);
+router.delete(
+  "/:userId",
+  userMiddleware.isUserExist,
+  userController.deleteUser,
+);
 
 export const userRouter = router;
