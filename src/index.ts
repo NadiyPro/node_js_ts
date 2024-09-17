@@ -2,7 +2,8 @@ import express, { Request, Response } from "express";
 
 import { ApiError } from "./errors/api.error";
 import { userRouter } from "./router/router";
-import {config} from "./config/configs";
+import * as mongoose from "mongoose";
+import { config } from "./config/configs";
 
 const app = express();
 
@@ -16,6 +17,9 @@ app.use("*", (error: ApiError, req: Request, res: Response) => {
   res.status(error.status || 500).send(error.message);
 });
 // на якому порті відкриваємо (номер хосту)
-app.listen(config.APP_PORT, () => {
-  console.log(`Server is running on https://${config.APP_HOST}:${config.APP_PORT}`);
+app.listen(config.APP_PORT, async () => {
+  await mongoose.connect(config.MONGO_URI);
+  console.log(
+      `Server is running on https://${config.APP_HOST}:${config.APP_PORT}`,
+  );
 });
