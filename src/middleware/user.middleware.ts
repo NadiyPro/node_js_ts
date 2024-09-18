@@ -31,8 +31,8 @@ class UserMiddleware {
     res: Response,
     next: NextFunction,
   ): Promise<void> {
-    const userId = Number(req.params.userId);
-    const userIndex = users.findIndex((user) => user.id === userId);
+    const userId = req.params.userId;
+    const userIndex = users.findIndex((user) => user._id === userId);
 
     if (userIndex === -1) {
       throw new ApiError("User not found", 400);

@@ -1,7 +1,8 @@
 import { RoleEnum } from "../enums/role.enum";
 
 export interface IUser {
-  id: number;
+  _id?: string;
+  // id: number;
   name: string;
   age: number;
   status: boolean;
@@ -11,5 +12,4 @@ export interface IUser {
   phone?: string;
   createdAt?: Date;
   updatedAt?: Date;
-  // _id?: string;
 }

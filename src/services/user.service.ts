@@ -14,8 +14,16 @@ class UserService {
     age: number,
     status: boolean,
   ): Promise<IUser> {
-    const id = users[users.length - 1].id + 1; // Генеруємо новий id для користувача
-    const newUser: IUser = { id, name, age, status };
+    const _id = users[users.length - 1]._id + 1; // Генеруємо новий id для користувача
+    const newUser: IUser = {
+      isDeleted: false,
+      isVerified: false,
+      role: undefined,
+      _id,
+      name,
+      age,
+      status,
+    };
     users.push(newUser);
     await write(users);
     return newUser;
