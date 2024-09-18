@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
 
-// import { RoleEnum } from "../enums/role.enum";
+import { RoleEnum } from "../enums/role.enum";
 import { IUser } from "../interfaces/IUser";
 
 const userSchema = new Schema(
@@ -11,7 +11,7 @@ const userSchema = new Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
     phone: { type: String, required: false },
-    // role: { type: String, enum: RoleEnum, default: RoleEnum.USER },
+    role: { type: String, enum: RoleEnum, default: RoleEnum.USER },
     isVerified: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
   },
