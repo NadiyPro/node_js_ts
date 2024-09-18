@@ -62,8 +62,8 @@ class UserService {
       User.findByIdAndUpdate(
         userId,
         { name, age, status },
-        { new: true }, // Це дозволяє повернути вже оновленого користувача
-      ),
+        { new: true }, // повертаємо вже оновленого користувача (new: true - повернути вже оновлену версію документа)
+      ), // перезатираємо юзера під зазначеним userId
     ]);
     return updatedUser;
   }
