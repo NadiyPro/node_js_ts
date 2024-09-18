@@ -57,20 +57,20 @@ class UserController {
       next(e);
     }
   }
-  //
-  // public async deleteUser(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction,
-  // ): Promise<void> {
-  //   try {
-  //     const userIndex = (req as any).userIndex;
-  //     await userService.deleteUser(userIndex);
-  //     res.sendStatus(204);
-  //   } catch (e) {
-  //     next(e);
-  //   }
-  // }
+
+  public async deleteUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const userIndex = (req as any).userIndex;
+      await userService.deleteUser(userIndex);
+      res.sendStatus(204);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export const userController = new UserController();

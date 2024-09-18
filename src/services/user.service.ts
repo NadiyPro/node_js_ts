@@ -22,36 +22,6 @@ class UserService {
     return newUser;
   }
 
-  // public async postUser(
-  //   name: string,
-  //   age: number,
-  //   status: boolean,
-  // ): Promise<IUser> {
-  //   const _id = users[users.length - 1]._id + 1; // Генеруємо новий id для користувача
-  //   const newUser: IUser = {
-  //     isDeleted: false,
-  //     isVerified: false,
-  //     role: undefined,
-  //     _id,
-  //     name,
-  //     age,
-  //     status,
-  //   };
-  //   users.push(newUser);
-  //   await write(users);
-  //   return newUser;
-  // }
-  //////////////////////////////////////////////////////////
-  // public async updateUser(
-  //   userIndex: string,
-  //   name: string,
-  //   age: number,
-  //   status: boolean,
-  // ): Promise<IUser> {
-  //   await User.findByIdAndUpdate(...userIndex, name, age, status);
-  //   return;
-  // }
-
   public async updateUser(
     userId: string,
     name: string,
@@ -68,22 +38,9 @@ class UserService {
     return updatedUser;
   }
 
-  // public async updateUser(
-  //   userIndex: number,
-  //   name: string,
-  //   age: number,
-  //   status: boolean,
-  // ): Promise<IUser> {
-  //   users[userIndex] = { ...users[userIndex], name, age, status }; // через спред перезатираємо користувача, тобто створюємо нове посилання на користувача з оновленими данними
-  //   await write(users);
-  //   return users[userIndex];
-  // }
-  //
-  // public async deleteUser(userIndex: number): Promise<IUser[]> {
-  //   users.splice(userIndex, 1);
-  //   await write(users);
-  //   return users;
-  // }
+  public async deleteUser(userId: string): Promise<void> {
+    await User.deleteOne({ _id: userId });
+  }
 }
 
 export const userService = new UserService();

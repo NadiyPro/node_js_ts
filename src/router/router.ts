@@ -15,10 +15,10 @@ router.put(
   userMiddleware.isUserExist,
   userController.updateUser,
 );
-// router.delete(
-//   "/:userId",
-//   userMiddleware.isUserExist,
-//   userController.deleteUser,
-// );
+router.delete(
+  "/:userId",
+  userMiddleware.isUserExist,
+  userController.deleteUser,
+);
 
 export const userRouter = router;
