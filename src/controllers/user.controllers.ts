@@ -44,14 +44,9 @@ class UserController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const userIndex = (req as any).userIndex;
+      const userId = (req as any).userId;
       const { name, age, status } = req.body;
-      const newUser = await userService.updateUser(
-        userIndex,
-        name,
-        age,
-        status,
-      );
+      const newUser = await userService.updateUser(userId, name, age, status);
       res.status(201).json(newUser); // повертаємо оновленого користувача у відповідь
     } catch (e) {
       next(e);
