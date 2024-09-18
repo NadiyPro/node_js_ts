@@ -59,8 +59,8 @@ class UserController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const userIndex = (req as any).userIndex;
-      await userService.deleteUser(userIndex);
+      const userId = (req as any).userId;
+      await userService.deleteUser(userId);
       res.sendStatus(204);
     } catch (e) {
       next(e);
