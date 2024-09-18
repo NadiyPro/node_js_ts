@@ -6,10 +6,10 @@ export interface IUser {
   name: string;
   age: number;
   status: boolean;
+  email?: string;
+  password?: string;
+  phone?: string;
   role: RoleEnum;
   isVerified: boolean;
   isDeleted: boolean;
-  phone?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
 }

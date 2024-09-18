@@ -3,7 +3,7 @@ import { model, Schema } from "mongoose";
 import { RoleEnum } from "../enums/role.enum";
 import { IUser } from "../interfaces/IUser";
 
-const userSchema = new Schema(
+const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
     age: { type: Number, required: true },
