@@ -44,7 +44,7 @@ class UserController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const userId = (req as any).userId;
+      const userId = req.params.userId;
       const { name, age, status } = req.body;
       const newUser = await userService.updateUser(userId, name, age, status);
       res.status(201).json(newUser); // повертаємо оновленого користувача у відповідь
@@ -59,7 +59,7 @@ class UserController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const userId = (req as any).userId;
+      const userId = req.params.userId;
       await userService.deleteUser(userId);
       res.sendStatus(204);
     } catch (e) {
