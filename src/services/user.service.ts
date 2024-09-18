@@ -43,6 +43,32 @@ class UserService {
   // }
   //////////////////////////////////////////////////////////
   // public async updateUser(
+  //   userIndex: string,
+  //   name: string,
+  //   age: number,
+  //   status: boolean,
+  // ): Promise<IUser> {
+  //   await User.findByIdAndUpdate(...userIndex, name, age, status);
+  //   return;
+  // }
+
+  public async updateUser(
+    userId: string,
+    name: string,
+    age: number,
+    status: boolean,
+  ): Promise<IUser | null> {
+    const [updatedUser] = await Promise.all([
+      User.findByIdAndUpdate(
+        userId,
+        { name, age, status },
+        { new: true }, // Це дозволяє повернути вже оновленого користувача
+      ),
+    ]);
+    return updatedUser;
+  }
+
+  // public async updateUser(
   //   userIndex: number,
   //   name: string,
   //   age: number,

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { ApiError } from "../errors/api.error";
+import { User } from "../models/user.model";
 // import { users } from "../users_array";
 
 class UserMiddleware {
@@ -42,6 +43,38 @@ class UserMiddleware {
   //   (req as any).userIndex = userIndex; // Зберігаємо індекс користувача
   //   next(); // в разі успіху крокуємо далі, тобто йдемо в контролер
   // }
+  public async isUserExist(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const userId = req.params.userId;
+    const user = await User.findById(userId); // Пошук користувача по ID в БД Mongodb
+
+    if (!user) {
+      throw new ApiError("User not found", 400);
+    }
+
+    (req as any).user = user; // Зберігаємо знайденого користувача
+    next();
+  }
 }
+
+//   public async isUserExist(
+//     req: Request,
+//     res: Response,
+//     next: NextFunction,
+//   ): Promise<void> {
+//     const userId = req.params.userId;
+//     const userIndex = users.findIndex((user) => user._id === userId);
+//
+//     if (userIndex === -1) {
+//       throw new ApiError("User not found", 400);
+//     }
+//
+//     (req as any).user = users[userIndex]; // Зберігаємо користувача
+//     (req as any).userIndex = userIndex; // Зберігаємо індекс користувача
+//     next(); // в разі успіху крокуємо далі, тобто йдемо в контролер
+//   }
 
 export const userMiddleware = new UserMiddleware();
