@@ -21,14 +21,11 @@ class UserService {
     age: number,
     status: boolean,
   ): Promise<IUser | null> {
-    const [updatedUser] = await Promise.all([
-      User.findByIdAndUpdate(
-        userId,
-        { name, age, status },
-        { new: true }, // повертаємо вже оновленого користувача (new: true - повернути вже оновлену версію документа)
-      ), // перезатираємо юзера під зазначеним userId
-    ]);
-    return updatedUser;
+    return await User.findByIdAndUpdate(
+      userId,
+      { name, age, status },
+      { new: true }, // повертаємо вже оновленого користувача (new: true - повернути вже оновлену версію документа)
+    ); // перезатираємо юзера під зазначеним userId
   }
 
   public async deleteUser(userId: string): Promise<void> {
