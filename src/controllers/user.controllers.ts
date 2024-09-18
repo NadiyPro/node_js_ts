@@ -38,39 +38,39 @@ class UserController {
       next(e);
     }
   }
-  public async updateUser(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    try {
-      const userIndex = (req as any).userIndex;
-      const { name, age, status } = req.body;
-      const newUser = await userService.updateUser(
-        userIndex,
-        name,
-        age,
-        status,
-      );
-      res.status(201).json(newUser); // повертаємо оновленого користувача у відповідь
-    } catch (e) {
-      next(e);
-    }
-  }
-
-  public async deleteUser(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    try {
-      const userIndex = (req as any).userIndex;
-      await userService.deleteUser(userIndex);
-      res.sendStatus(204);
-    } catch (e) {
-      next(e);
-    }
-  }
+  // public async updateUser(
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction,
+  // ): Promise<void> {
+  //   try {
+  //     const userIndex = (req as any).userIndex;
+  //     const { name, age, status } = req.body;
+  //     const newUser = await userService.updateUser(
+  //       userIndex,
+  //       name,
+  //       age,
+  //       status,
+  //     );
+  //     res.status(201).json(newUser); // повертаємо оновленого користувача у відповідь
+  //   } catch (e) {
+  //     next(e);
+  //   }
+  // }
+  //
+  // public async deleteUser(
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction,
+  // ): Promise<void> {
+  //   try {
+  //     const userIndex = (req as any).userIndex;
+  //     await userService.deleteUser(userIndex);
+  //     res.sendStatus(204);
+  //   } catch (e) {
+  //     next(e);
+  //   }
+  // }
 }
 
 export const userController = new UserController();
