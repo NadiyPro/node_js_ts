@@ -22,7 +22,6 @@ class UserService {
     age: number,
     status: boolean,
   ): Promise<IUser | null> {
-
     return await User.findByIdAndUpdate(
       userId,
       { name, age, status },
