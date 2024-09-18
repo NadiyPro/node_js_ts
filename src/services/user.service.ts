@@ -1,17 +1,10 @@
 import { IUser } from "../interfaces/IUser";
 import { User } from "../models/user.model";
-// import { users } from "../users_array";
-// import { read, write } from "./fs.service";
 
 class UserService {
   public getUsers() {
     return User.find({});
   }
-  // public async getUsers() {
-  //   await write(users); // Записуємо користувачів у файл
-  //   await read(); // зчитуємо одразу в норм форматі utf-8
-  //   return users;
-  // }
 
   public async postUser(
     name: string,
