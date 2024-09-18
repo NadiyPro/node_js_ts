@@ -27,9 +27,9 @@ class UserMiddleware {
   }
 
   public async isUserExist(
-      req: Request,
-      res: Response,
-      next: NextFunction,
+    req: Request,
+    res: Response,
+    next: NextFunction,
   ): Promise<void> {
     const userId = req.params.userId;
     const user = await User.findById(userId); //перевіряємо через пошук (метод findById) чи є в нас в БД користувач з вказаним userId
@@ -41,8 +41,6 @@ class UserMiddleware {
     (req as any).user = user; // Зберігаємо знайденого користувача
     next();
   }
-
-
 }
 
 export const userMiddleware = new UserMiddleware();
