@@ -1,6 +1,6 @@
 import { IUser } from "../interfaces/IUser";
 import { User } from "../models/user.model";
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 
 class UserService {
   public getUsers() {
@@ -22,10 +22,7 @@ class UserService {
     age: number,
     status: boolean,
   ): Promise<IUser | null> {
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      console.error(`Invalid ObjectId: ${userId}`);
-      return null;
-    }
+
     return await User.findByIdAndUpdate(
       userId,
       { name, age, status },
