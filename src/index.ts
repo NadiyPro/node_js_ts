@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/users", userRouter);
+app.use("/users1", userRouter);
 
 //обробка помилок які ми витягнули сюди (на верхній рівень) через next()
 app.use("*", (error: ApiError, req: Request, res: Response) => {
