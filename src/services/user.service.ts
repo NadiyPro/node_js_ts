@@ -1,6 +1,5 @@
 import { IUser } from "../interfaces/IUser";
 import { User } from "../models/user.model";
-// import mongoose from "mongoose";
 
 class UserService {
   public getUsers() {
@@ -11,8 +10,12 @@ class UserService {
     name: string,
     age: number,
     status: boolean,
+    email: string,
+    password: string,
   ): Promise<IUser> {
-    const [newUser] = await Promise.all([User.create({ name, age, status })]);
+    const [newUser] = await Promise.all([
+      User.create({ name, age, status, email, password }),
+    ]);
     return newUser;
   }
 
@@ -21,10 +24,12 @@ class UserService {
     name: string,
     age: number,
     status: boolean,
+    email: string,
+    password: string,
   ): Promise<IUser | null> {
     return await User.findByIdAndUpdate(
       userId,
-      { name, age, status },
+      { name, age, status, email, password },
       { new: true }, // повертаємо вже оновленого користувача (new: true - повернути вже оновлену версію документа)
     ); // перезатираємо юзера під зазначеним userId
   }
