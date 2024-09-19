@@ -18,14 +18,8 @@ class UserController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const { name, age, status, email, password } = req.body;
-      const newUser = await userService.postUser(
-        name,
-        age,
-        status,
-        email,
-        password,
-      );
+      const { name, age, email, password } = req.body;
+      const newUser = await userService.postUser(name, age, email, password);
       res.status(201).json(newUser); // Повертаємо новоствореного користувача у відповідь
     } catch (e) {
       next(e);
@@ -51,12 +45,11 @@ class UserController {
   ): Promise<void> {
     try {
       const userId = req.params.userId;
-      const { name, age, status, email, password } = req.body;
+      const { name, age, email, password } = req.body;
       const newUser = await userService.updateUser(
         userId,
         name,
         age,
-        status,
         email,
         password,
       );

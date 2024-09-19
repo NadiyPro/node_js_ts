@@ -9,12 +9,11 @@ class UserService {
   public async postUser(
     name: string,
     age: number,
-    status: boolean,
     email: string,
     password: string,
   ): Promise<IUser> {
     const [newUser] = await Promise.all([
-      User.create({ name, age, status, email, password }),
+      User.create({ name, age, email, password }),
     ]);
     return newUser;
   }
@@ -23,13 +22,12 @@ class UserService {
     userId: string,
     name: string,
     age: number,
-    status: boolean,
     email: string,
     password: string,
   ): Promise<IUser | null> {
     return await User.findByIdAndUpdate(
       userId,
-      { name, age, status, email, password },
+      { name, age, email, password },
       { new: true }, // повертаємо вже оновленого користувача (new: true - повернути вже оновлену версію документа)
     ); // перезатираємо юзера під зазначеним userId
   }
