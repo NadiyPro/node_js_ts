@@ -7,11 +7,11 @@ import { UserValidator } from "../validators/user.validator";
 const router = Router();
 
 router.get("/", userController.getUsers);
-router.post(
-  "/",
-  userMiddleware.validateUser(UserValidator.create),
-  userController.postUser,
-);
+// router.post(
+//   "/",
+//   userMiddleware.validateUser(UserValidator.create),
+//   userController.postUser,
+// );
 
 router.get("/:userId", userMiddleware.isUserExist, userController.getUserId);
 router.put(

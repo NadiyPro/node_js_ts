@@ -12,19 +12,19 @@ class UserController {
     }
   }
 
-  public async postUser(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    try {
-      const { name, age, email, password } = req.body;
-      const newUser = await userService.postUser(name, age, email, password);
-      res.status(201).json(newUser); // Повертаємо новоствореного користувача у відповідь
-    } catch (e) {
-      next(e);
-    }
-  }
+  // public async postUser(
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction,
+  // ): Promise<void> {
+  //   try {
+  //     const { name, age, email, password } = req.body;
+  //     const newUser = await userService.postUser(name, age, email, password);
+  //     res.status(201).json(newUser); // Повертаємо новоствореного користувача у відповідь
+  //   } catch (e) {
+  //     next(e);
+  //   }
+  // }
 
   public async getUserId(
     req: Request,

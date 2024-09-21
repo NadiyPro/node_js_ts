@@ -7,15 +7,15 @@ class UserService {
     return User.find({});
   }
 
-  public async postUser(
-    name: string,
-    age: number,
-    email: string,
-    password: string,
-  ): Promise<IUser> {
-    const hashedPassword = await passwordService.hashPassword(password); // хешуємо пароль
-    return await User.create({ name, age, email, password: hashedPassword }); // замінюємо password який нам надійшов на хешований hashedPassword
-  }
+  // public async postUser(
+  //   name: string,
+  //   age: number,
+  //   email: string,
+  //   password: string,
+  // ): Promise<IUser> {
+  //   const hashedPassword = await passwordService.hashPassword(password); // хешуємо пароль
+  //   return await User.create({ name, age, email, password: hashedPassword }); // замінюємо password який нам надійшов на хешований hashedPassword
+  // }
 
   public async updateUser(
     userId: string,
