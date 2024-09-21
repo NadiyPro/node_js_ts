@@ -1,11 +1,11 @@
+import { ApiError } from "../errors/api.error";
 import { ITokenPair } from "../interfaces/IToken";
-import {ISignIn, IUser} from "../interfaces/IUser";
+import { ISignIn, IUser } from "../interfaces/IUser";
 import { User } from "../models/user.model";
 import { tokenRepository } from "../repositories/token.repository";
 import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
-import {userService} from "./user.service";
-import {ApiError} from "../errors/api.error";
+import { userService } from "./user.service";
 
 class AuthService {
   public async signUp(
@@ -27,16 +27,18 @@ class AuthService {
     return { user, tokens };
   } // в singUp ми створюємо нового юзера (логінація) та видаємо йому токени, записуємо в БД
 
-  public async signIn(dto: ISignIn): Promise<{ user: IUser; tokens: ITokenPair }>{
+  public async signIn(
+    dto: ISignIn,
+  ): Promise<{ user: IUser; tokens: ITokenPair }> {
     const users = await userService.getUsers(); // Це повертає масив користувачів
-    const user = users.find(user => user.email === dto.email);
+    const user = users.find((user) => user.email === dto.email);
     // Знаходимо юзера за email в БД (хоча це все можна було винести в окремий репозиторій і назвати його наприклад user.repositories
     if (!user) {
       throw new ApiError("User not found", 404);
     }
     const isPasswordCorrect = await passwordService.comparePassword(
-        dto.password,
-        user.password, // або відповідне поле у вашій моделі
+      dto.password,
+      user.password, // або відповідне поле у вашій моделі
     );
     // const isPasswordCorrect = await passwordService.comparePassword(
     //     dto.password, // пароль який прийшов
@@ -53,7 +55,7 @@ class AuthService {
     });
     await tokenRepository.create({ ...tokens, _userId: user._id });
     return { user, tokens };
-  }// якщо все добре, в нас є такий юзер і він ввіві вірний пароль, тобто пройшов аутентифікацію,
+  } // якщо все добре, в нас є такий юзер і він ввіві вірний пароль, тобто пройшов аутентифікацію,
   // то ми генеруємо нову пару токенів access та refresh
 }
 
