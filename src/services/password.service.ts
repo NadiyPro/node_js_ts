@@ -9,8 +9,8 @@ class PasswordService {
     password: string,
     hashedPassword: string,
   ): Promise<boolean> {
-    console.log(password)
-    console.log(hashedPassword)
+    console.log(password);
+    console.log(hashedPassword);
     return await bcrypt.compare(password, hashedPassword); // порівнюємо новий введений пароль з раніше введеним паролем
   }
 }
