@@ -1,5 +1,6 @@
 import { IUser } from "../interfaces/IUser";
 import { User } from "../models/user.model";
+import { passwordService } from "./password.service";
 
 class UserService {
   public getUsers() {
@@ -12,10 +13,8 @@ class UserService {
     email: string,
     password: string,
   ): Promise<IUser> {
-    const [newUser] = await Promise.all([
-      User.create({ name, age, email, password }),
-    ]);
-    return newUser;
+    await passwordService.hashPassword(password);
+    return await User.create({ name, age, email, password });
   }
 
   public async updateUser(
