@@ -13,8 +13,8 @@ class UserService {
     email: string,
     password: string,
   ): Promise<IUser> {
-    await passwordService.hashPassword(password);
-    return await User.create({ name, age, email, password });
+    const passwordHash = await passwordService.hashPassword(password);
+    return await User.create({ name, age, email, passwordHash });
   }
 
   public async updateUser(
