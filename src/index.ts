@@ -3,6 +3,7 @@ import * as mongoose from "mongoose";
 
 import { config } from "./config/configs";
 import { ApiError } from "./errors/api.error";
+import { authRouter } from "./router/auth.router";
 import { userRouter } from "./router/router";
 
 const app = express();
@@ -10,6 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/auth", authRouter);
 app.use("/users1", userRouter);
 
 //обробка помилок які ми витягнули сюди (на верхній рівень) через next()
