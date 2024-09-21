@@ -4,7 +4,7 @@ import { passwordService } from "./password.service";
 
 class UserService {
   public getUsers() {
-    return User.find({});
+    return User.find({}).select("+password");
   }
 
   // public async postUser(

@@ -11,3 +11,5 @@ export interface IUser {
   isVerified: boolean;
   isDeleted: boolean;
 }
+
+export type ISignIn = Pick<IUser, "email" | "password">

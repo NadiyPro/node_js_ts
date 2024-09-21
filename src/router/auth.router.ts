@@ -7,14 +7,14 @@ import { UserValidator } from "../validators/user.validator";
 const router = Router();
 
 router.post(
-  "/sing-up",
+  "/sign-up",
   userMiddleware.validateUser(UserValidator.create),
-  authControllers.singUp,
+  authControllers.signUp,
 );
 router.post(
-  "/sing-in",
+  "/sign-in",
   // userMiddleware.validateUser(UserValidator.create),
-  authControllers.singIn,
+  authControllers.signIn,
 );
 
 export const authRouter = router;

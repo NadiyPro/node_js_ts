@@ -4,24 +4,24 @@ import { IUser } from "../interfaces/IUser";
 import { authService } from "../services/auth.service";
 
 class AuthControllers {
-  public async singUp(req: Request, res: Response, next: NextFunction) {
+  public async signUp(req: Request, res: Response, next: NextFunction) {
     try {
       const dto = req.body as IUser;
-      const users = await authService.singUp(dto);
+      const users = await authService.signUp(dto);
       res.status(201).json(users);
     } catch (e) {
       next(e);
     }
   }
 
-  public async singIn(
+  public async signIn(
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<void> {
     try {
       const dto = req.body as IUser;
-      const newUser = await authService.singIn(dto);
+      const newUser = await authService.signIn(dto);
       res.status(201).json(newUser);
     } catch (e) {
       next(e);
