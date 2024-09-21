@@ -13,7 +13,8 @@ class AuthService {
   ): Promise<{ user: IUser; tokens: ITokenPair }> {
     const hashedPassword = await passwordService.hashPassword(dto.password); // хешуємо пароль
     const user = await User.create({ ...dto, password: hashedPassword });
-    // записуємо в БД юзера з тими даними що нам прийшли, але вже з новим захешованим паролем, тобто в поле password записуємо hashedPassword
+    // записуємо в БД юзера з тими даними що нам прийшли, але вже з новим захешованим паролем,
+    // тобто в поле password записуємо hashedPassword
     const tokens = tokenService.generateTokens({
       userId: user._id,
       role: user.role,
