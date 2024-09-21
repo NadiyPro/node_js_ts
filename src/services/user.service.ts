@@ -13,8 +13,8 @@ class UserService {
     email: string,
     password: string,
   ): Promise<IUser> {
-    const passwordHash = await passwordService.hashPassword(password);
-    return await User.create({ name, age, email, passwordHash });
+    const hashedPassword = await passwordService.hashPassword(password); // хешуємо пароль
+    return await User.create({ name, age, email, password: hashedPassword }); // замінюємо password який нам надійшов на хешований hashedPassword
   }
 
   public async updateUser(
@@ -24,11 +24,12 @@ class UserService {
     email: string,
     password: string,
   ): Promise<IUser | null> {
+    const hashedPassword = await passwordService.hashPassword(password); // хешуємо пароль
     return await User.findByIdAndUpdate(
       userId,
-      { name, age, email, password },
+      { name, age, email, password: hashedPassword },
       { new: true }, // повертаємо вже оновленого користувача (new: true - повернути вже оновлену версію документа)
-    ); // перезатираємо юзера під зазначеним userId
+    ); // перезатираємо юзера під зазначеним userId та замінюємо password який нам надійшов на хешований hashedPassword
   }
 
   public async deleteUser(userId: string): Promise<void> {
