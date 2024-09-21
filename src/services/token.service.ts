@@ -1,0 +1,36 @@
+import * as jsonwebtoken from "jsonwebtoken";
+
+import { config } from "../config/configs";
+import { TokenTypeEnum } from "../enums/token.enum";
+import { ApiError } from "../errors/api.error";
+import { ITokenPair, ITokenPayload } from "../interfaces/IToken";
+
+class TokenService {
+  public generateTokens(payload: ITokenPayload): ITokenPair {
+    const accessToken = jsonwebtoken.sign(payload, config.JWT_ACCESS_SECRET, {
+      expiresIn: config.JWT_ACCESS_EXPIRATION,
+    });
+    const refreshToken = jsonwebtoken.sign(payload, config.JWT_REFRESH_SECRET, {
+      expiresIn: config.JWT_REFRESH_EXPIRATION,
+    });
+    return { accessToken, refreshToken };
+  } // створюємо токени
+
+  public verifyToken(token: string, type: TokenTypeEnum): ITokenPayload {
+    try {
+      let secret: string;
+
+      if (type === TokenTypeEnum.ACCESS) {
+        secret = config.JWT_ACCESS_SECRET;
+      } else if (type === TokenTypeEnum.REFRESH) {
+        secret = config.JWT_REFRESH_SECRET;
+      }
+      return jsonwebtoken.verify(token, secret) as ITokenPayload;
+    } catch (e) {
+      console.error(e.message);
+      throw new ApiError("Invalid token", 401);
+    }
+  } // перевіряємо токени
+}
+
+export const tokenService = new TokenService();
