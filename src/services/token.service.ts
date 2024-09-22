@@ -19,12 +19,20 @@ class TokenService {
   public verifyToken(token: string, type: TokenTypeEnum): ITokenPayload {
     try {
       let secret: string;
+      switch (type) {
+        case TokenTypeEnum.ACCESS:
+          secret = config.JWT_ACCESS_SECRET;
+          break;
 
-      if (type === TokenTypeEnum.ACCESS) {
-        secret = config.JWT_ACCESS_SECRET;
-      } else if (type === TokenTypeEnum.REFRESH) {
-        secret = config.JWT_REFRESH_SECRET;
+        case TokenTypeEnum.REFRESH:
+          secret = config.JWT_REFRESH_SECRET;
+          break;
       }
+      // if (type === TokenTypeEnum.ACCESS) {
+      //   secret = config.JWT_ACCESS_SECRET;
+      // } else if (type === TokenTypeEnum.REFRESH) {
+      //   secret = config.JWT_REFRESH_SECRET;
+      // }
       return jsonwebtoken.verify(token, secret) as ITokenPayload;
     } catch (e) {
       console.error(e.message);
@@ -32,7 +40,7 @@ class TokenService {
     }
   } // jsonwebtoken.verify перевіряємо токен,
   // чи був він створений з використанням конкретного секретного ключа і чи не закінчився термін його дії
-  // використовуємо в auth.middleware.ts для перевірки валідності токенів, щоб виконати запит який нас цікавить (delete в нашому прикладі)
+  // використовуємо в auth.middleware.ts для перевірки валідності токенів, щоб виконати запит який нас цікавить
 }
 
 export const tokenService = new TokenService();
