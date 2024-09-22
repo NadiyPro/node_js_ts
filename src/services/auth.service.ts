@@ -34,6 +34,7 @@ class AuthService {
     const users = await userService.getUsers(); // Це повертає масив користувачів
     const user = users.find((user) => user.email === dto.email);
     // Знаходимо юзера за email в БД (хоча це все можна було винести в окремий репозиторій і назвати його наприклад user.repositories
+    // якщо email що введено юзером ==== email з БД, то витягаємо дані по цьому юзеру
     if (!user) {
       throw new ApiError("User not found", 404);
     }
