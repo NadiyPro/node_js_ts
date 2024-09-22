@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
+import { ITokenPayload } from "../interfaces/IToken";
+import { IUser } from "../interfaces/IUser";
 import { userService } from "../services/user.service";
 
 class UserController {
@@ -11,20 +13,6 @@ class UserController {
       next(e); // передаємо помилки на обробку на верхній рівень, тобто в index.ts
     }
   }
-
-  // public async postUser(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction,
-  // ): Promise<void> {
-  //   try {
-  //     const { name, age, email, password } = req.body;
-  //     const newUser = await userService.postUser(name, age, email, password);
-  //     res.status(201).json(newUser); // Повертаємо новоствореного користувача у відповідь
-  //   } catch (e) {
-  //     next(e);
-  //   }
-  // }
 
   public async getUserId(
     req: Request,
@@ -38,35 +26,41 @@ class UserController {
       next(e);
     }
   }
-  public async updateUser(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+
+  public async getMe(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = req.params.userId;
-      const { name, age, email, password } = req.body;
-      const newUser = await userService.updateUser(
-        userId,
-        name,
-        age,
-        email,
-        password,
-      );
-      res.status(201).json(newUser); // повертаємо оновленого користувача у відповідь
+      const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
+
+      const result = await userService.getMe(jwtPayload);
+      res.json(result);
     } catch (e) {
       next(e);
     }
   }
 
-  public async deleteUser(
+  public async updateMe(req: Request, res: Response, next: NextFunction) {
+    try {
+      const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
+      const dto = req.body as IUser;
+
+      const result = await userService.updateMe(jwtPayload, dto);
+      res.json(result);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async deleteMe(
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<void> {
     try {
-      const userId = req.params.userId;
-      await userService.deleteUser(userId);
+      const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
+      await userService.deleteMe(jwtPayload);
+      // ми хочемо видалити тепер НЕ по userId, а конкретно хочемо видалити себе
+      // const userId = req.params.userId;
+      // await userService.deleteUser(userId);
       res.sendStatus(204);
     } catch (e) {
       next(e);

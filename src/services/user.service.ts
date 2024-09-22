@@ -1,39 +1,35 @@
+import { ApiError } from "../errors/api.error";
+import { ITokenPayload } from "../interfaces/IToken";
 import { IUser } from "../interfaces/IUser";
-import { User } from "../models/user.model";
-import { passwordService } from "./password.service";
+import { userRepository } from "../repositories/user.repository";
 
 class UserService {
-  public getUsers() {
-    return User.find({}).select("+password");
+  public async getUsers(): Promise<IUser[]> {
+    return await userRepository.getUsers();
   }
 
-  // public async postUser(
-  //   name: string,
-  //   age: number,
-  //   email: string,
-  //   password: string,
-  // ): Promise<IUser> {
-  //   const hashedPassword = await passwordService.hashPassword(password); // хешуємо пароль
-  //   return await User.create({ name, age, email, password: hashedPassword }); // замінюємо password який нам надійшов на хешований hashedPassword
-  // }
-
-  public async updateUser(
-    userId: string,
-    name: string,
-    age: number,
-    email: string,
-    password: string,
-  ): Promise<IUser | null> {
-    const hashedPassword = await passwordService.hashPassword(password); // хешуємо пароль
-    return await User.findByIdAndUpdate(
-      userId,
-      { name, age, email, password: hashedPassword },
-      { new: true }, // повертаємо вже оновленого користувача (new: true - повернути вже оновлену версію документа)
-    ); // перезатираємо юзера під зазначеним userId та замінюємо password який нам надійшов на хешований hashedPassword
+  public async getById(userId: string): Promise<IUser> {
+    const user = await userRepository.getById(userId);
+    if (!user) {
+      throw new ApiError("User not found", 404);
+    }
+    return user;
   }
 
-  public async deleteUser(userId: string): Promise<void> {
-    await User.deleteOne({ _id: userId });
+  public async getMe(jwtPayload: ITokenPayload): Promise<IUser> {
+    const user = await userRepository.getById(jwtPayload.userId);
+    if (!user) {
+      throw new ApiError("User not found", 404);
+    }
+    return user;
+  }
+
+  public async updateMe(jwtPayload: ITokenPayload, dto: IUser): Promise<IUser> {
+    return await userRepository.updateById(jwtPayload.userId, dto);
+  }
+
+  public async deleteMe(jwtPayload: ITokenPayload): Promise<void> {
+    return await userRepository.deleteById(jwtPayload.userId);
   }
 }
 

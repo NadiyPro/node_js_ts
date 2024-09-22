@@ -1,0 +1,26 @@
+import { IUser } from "../interfaces/IUser";
+import { User } from "../models/user.model";
+
+class UserRepository {
+  public async getUsers(): Promise<IUser[]> {
+    return await User.find({}).select("+password");
+  }
+
+  public async create(dto: Partial<IUser>): Promise<IUser> {
+    return await User.create(dto);
+  }
+
+  public async getById(userId: string): Promise<IUser | null> {
+    return await User.findById(userId);
+  }
+
+  public async updateById(userId: string, dto: IUser): Promise<IUser> {
+    return await User.findByIdAndUpdate(userId, dto, { new: true });
+  }
+
+  public async deleteById(userId: string): Promise<void> {
+    await User.deleteOne({ _id: userId });
+  }
+}
+
+export const userRepository = new UserRepository();

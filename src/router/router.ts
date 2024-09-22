@@ -8,24 +8,15 @@ import { UserValidator } from "../validators/user.validator";
 const router = Router();
 
 router.get("/", userController.getUsers);
-// router.post(
-//   "/",
-//   userMiddleware.validateUser(UserValidator.create),
-//   userController.postUser,
-// );
 
-router.get("/:userId", userMiddleware.isUserExist, userController.getUserId);
+router.get("/me", authMiddleware.checkAccessToken, userController.getMe);
 router.put(
-  "/:userId",
-  userMiddleware.validateUser(UserValidator.update),
-  userMiddleware.isUserExist,
-  userController.updateUser,
-);
-router.delete(
-  "/:userId",
+  "/me",
   authMiddleware.checkAccessToken,
-  userMiddleware.isUserExist,
-  userController.deleteUser,
+  userMiddleware.validateUser(UserValidator.update),
+  userController.updateMe,
 );
+router.delete("/me", authMiddleware.checkAccessToken, userController.deleteMe);
+router.get("/:userId", userMiddleware.isUserExist, userController.getUserId);
 
 export const userRouter = router;
