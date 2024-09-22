@@ -30,7 +30,8 @@ class TokenService {
       console.error(e.message);
       throw new ApiError("Invalid token", 401);
     }
-  } // перевіряємо токени
+  } // jsonwebtoken.verify перевіряємо токен,
+  // чи був він створений з використанням конкретного секретного ключа і чи не закінчився термін його дії
 }
 
 export const tokenService = new TokenService();

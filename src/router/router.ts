@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { userController } from "../controllers/user.controllers";
+import { authMiddleware } from "../middleware/auth.middleware";
 import { userMiddleware } from "../middleware/user.middleware";
 import { UserValidator } from "../validators/user.validator";
 
@@ -22,6 +23,7 @@ router.put(
 );
 router.delete(
   "/:userId",
+  authMiddleware.checkAccessToken,
   userMiddleware.isUserExist,
   userController.deleteUser,
 );

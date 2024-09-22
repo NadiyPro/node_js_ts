@@ -8,7 +8,8 @@ class TokenRepository {
 
   public async findByParams(params: Partial<IToken>): Promise<IToken | null> {
     return await Token.findOne(params);
-  }
+  } // шукаємо / дістаємо один запис у колекції Token в БД відповідно до переданих параметрів,
+  // тобто шукаємо по значанню, що містяться в access / refresh токенах юзера і дістаєму інфо по ньому з БД
 
   public async deleteByParams(params: Partial<IToken>): Promise<void> {
     await Token.deleteOne(params);
