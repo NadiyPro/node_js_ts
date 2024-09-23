@@ -62,7 +62,7 @@ class AuthMiddleware {
         throw new ApiError("Token is not valid", 401);
       }
       req.res.locals.jwtPayload = payload;
-      req.res.locals.refreshToken = refreshToken; // перекинемо наш рефреш токен в контролер
+      req.res.locals.refreshToken = refreshToken; // перекинемо наш refresh токен в контролер
       next();
     } catch (e) {
       next(e);
@@ -72,6 +72,7 @@ class AuthMiddleware {
 
 export const authMiddleware = new AuthMiddleware();
 // створюємо auth.middleware.ts в якій:
+// public async checkAccessToken
 // доступаємось в HTTP-запиту до конкретний заголовка authorization, який знаходиться в headers
 //
 // дістанемо токен доступу з Authorization, беремо другий елемент масиву, тобто все, що йде після слова "Bearer " ( значення access / refresh токенів, які нам прийшли )
@@ -98,3 +99,7 @@ export const authMiddleware = new AuthMiddleware();
 // тобто видаляти не по userId як ми це робили раніше, а видалити повінстю обєкт з усіми даними який зайшов на даний запит, тобто видалити самого себе
 //  (та для інших запитів з шляхом “users1/me”)
 // *tokenService.verifyToken використовуємо в auth.middleware.ts для перевірки валідності токенів, щоб виконати запити які нас цікавлять
+//
+// public async checkRefreshToken:
+// для refresh замість req.body, нам в мідварці / контролері наступних треба дістати лише refresh токен, оскільки тут ми не вносимо ніякої інфо в body і наша ціль дістати лише refresh токен, видалити старий refresh і згенерувати нову пару токенів, тому ми і передаїмо з auth.middleware.ts лише req.res.locals.refreshToken = refreshToken;
+// все інше те ж саме що і в public async checkAccessToken
