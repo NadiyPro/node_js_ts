@@ -32,8 +32,8 @@ class AuthControllers {
   public async refresh(req: Request, res: Response, next: NextFunction) {
     try {
       const token = req.res.locals.refreshToken as string;
-      // замість req.body, оскільки тут ми не вносимо ніякої інфо в body,
-      // і наша ціль дістати лише refresh токен, видалити старий refresh і згенерувати нову пару токенів
+      // дістаємо refresh токен, щоб передати її в authService.refresh і видалити стару пару токенів,
+      // які містив у собі старий refreshToken і згенерувати нову пару токенів
       const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
 
       const result = await authService.refresh(token, jwtPayload);

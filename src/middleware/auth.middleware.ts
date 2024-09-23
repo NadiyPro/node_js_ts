@@ -34,7 +34,7 @@ class AuthMiddleware {
       // тут використовуємо саме verify, тому що він перевіряє secret (ключі, які сховані в .env та термін дії),
       // а decode ми тут НЕ використовуємо, бо він лише декодує БЕЗ перевірки підпису або дійсності токена
       console.log(payload);
-      req.res.locals.jwtPayload = payload;
+      req.res.locals.jwtPayload = payload; // обєкт який був закодований, в нашому випадку це userId та role
       next();
     } catch (e) {
       next(e);
@@ -61,7 +61,7 @@ class AuthMiddleware {
       if (!pair) {
         throw new ApiError("Token is not valid", 401);
       }
-      req.res.locals.jwtPayload = payload;
+      req.res.locals.jwtPayload = payload; // обєкт який був закодований, в нашому випадку це userId та role
       req.res.locals.refreshToken = refreshToken; // перекинемо наш refresh токен в контролер
       next();
     } catch (e) {
@@ -101,5 +101,8 @@ export const authMiddleware = new AuthMiddleware();
 // *tokenService.verifyToken використовуємо в auth.middleware.ts для перевірки валідності токенів, щоб виконати запити які нас цікавлять
 //
 // public async checkRefreshToken:
-// для refresh замість req.body, нам в мідварці / контролері наступних треба дістати лише refresh токен, оскільки тут ми не вносимо ніякої інфо в body і наша ціль дістати лише refresh токен, видалити старий refresh і згенерувати нову пару токенів, тому ми і передаїмо з auth.middleware.ts лише req.res.locals.refreshToken = refreshToken;
+// для refresh окрім req.body, нам в мідлварці / контролері наступних треба дістати ще значення refreshToken токену яке нам надійшло,
+// оскільки наша, видалити стару пару токенів, які містив у собі старий refreshToken
+// і згенерувати нову пару токенів, тому
+// окрім req.res.locals.jwtPayload = payload; ще req.res.locals.refreshToken = refreshToken;
 // все інше те ж саме що і в public async checkAccessToken

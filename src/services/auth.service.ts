@@ -56,16 +56,17 @@ class AuthService {
     return { user, tokens };
   } // якщо все добре, в нас є такий юзер і він ввіві вірний пароль, тобто пройшов аутентифікацію,
   // то ми генеруємо нову пару токенів access та refresh
-  // TODO add refresh token service
+
   public async refresh(
     refreshToken: string,
     payload: ITokenPayload,
   ): Promise<ITokenPair> {
     await tokenRepository.deleteByParams({ refreshToken });
+    // видаляємо стару пару токенів, які містив у собі старий refreshToken
     const tokens = tokenService.generateTokens({
       userId: payload.userId,
       role: payload.role,
-    }); // видаляємо з БД попередню пару токенів і генеруємо нову пару токенів
+    }); // генеруємо нову пару токенів
     await tokenRepository.create({ ...tokens, _userId: payload.userId });
     // нову пару токенів записуємо в БД і повертаємо респонсом юзеру
     return tokens;
