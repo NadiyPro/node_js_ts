@@ -1,8 +1,9 @@
 import { ApiError } from "../errors/api.error";
-import { ITokenPair } from "../interfaces/IToken";
+import { ITokenPair, ITokenPayload } from "../interfaces/IToken";
 import { ISignIn, IUser } from "../interfaces/IUser";
 import { User } from "../models/user.model";
 import { tokenRepository } from "../repositories/token.repository";
+// import { userRepository } from "../repositories/user.repository";
 import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
 import { userService } from "./user.service";
@@ -42,10 +43,6 @@ class AuthService {
       dto.password,
       user.password, // або відповідне поле у вашій моделі
     );
-    // const isPasswordCorrect = await passwordService.comparePassword(
-    //     dto.password, // пароль який прийшов
-    //     user.password, // пароль захешований з БД
-    // );
     // перевіряємо той пароль який ввів юзер з тим паролем, що захешований в нас в БД, через виділення солі та перехешування
     if (!isPasswordCorrect) {
       throw new ApiError("Invalid credentials", 401);
@@ -59,6 +56,27 @@ class AuthService {
     return { user, tokens };
   } // якщо все добре, в нас є такий юзер і він ввіві вірний пароль, тобто пройшов аутентифікацію,
   // то ми генеруємо нову пару токенів access та refresh
+  // TODO add refresh token service
+  public async refresh(
+    refreshToken: string,
+    payload: ITokenPayload,
+  ): Promise<ITokenPair> {
+    await tokenRepository.deleteByParams({ refreshToken });
+    const tokens = tokenService.generateTokens({
+      userId: payload.userId,
+      role: payload.role,
+    }); // видаляємо з БД попередню пару токенів і генеруємо нову пару токенів
+    await tokenRepository.create({ ...tokens, _userId: payload.userId });
+    // нову пару токенів записуємо в БД і повертаємо респонсом юзеру
+    return tokens;
+  }
+
+  // private async isEmailExistOrThrow(email: string): Promise<void> {
+  //   const user = await userRepository.getByEmail(email);
+  //   if (user) {
+  //     throw new ApiError("Email already exists", 409);
+  //   }
+  // }
 }
 
 export const authService = new AuthService();
