@@ -12,4 +12,4 @@ export interface IUser {
   isDeleted: boolean;
 }
 
-export type ISignIn = Pick<IUser, "email" | "password">
+export type ISignIn = Pick<IUser, "email" | "password">;
