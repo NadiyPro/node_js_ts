@@ -3,7 +3,7 @@ import { User } from "../models/user.model";
 
 class UserRepository {
   public async getUsers(): Promise<IUser[]> {
-    return await User.find({}).select("+password");
+    return await User.find({});
   }
 
   public async create(dto: Partial<IUser>): Promise<IUser> {
@@ -14,9 +14,9 @@ class UserRepository {
     return await User.findById(userId);
   }
 
-  // public async getByEmail(email: string): Promise<IUser | null> {
-  //   return await User.findOne({ email }).select("+password");
-  // }
+  public async getByEmail(email: string): Promise<IUser | null> {
+    return await User.findOne({ email }).select("+password");
+  }
 
   public async updateById(userId: string, dto: IUser): Promise<IUser> {
     return await User.findByIdAndUpdate(userId, dto, { new: true });

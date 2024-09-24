@@ -3,10 +3,9 @@ import { ITokenPair, ITokenPayload } from "../interfaces/IToken";
 import { ISignIn, IUser } from "../interfaces/IUser";
 import { User } from "../models/user.model";
 import { tokenRepository } from "../repositories/token.repository";
-// import { userRepository } from "../repositories/user.repository";
+import { userRepository } from "../repositories/user.repository";
 import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
-import { userService } from "./user.service";
 
 class AuthService {
   public async signUp(
@@ -32,9 +31,12 @@ class AuthService {
   public async signIn(
     dto: ISignIn,
   ): Promise<{ user: IUser; tokens: ITokenPair }> {
-    const users = await userService.getUsers(); // Це повертає масив користувачів
-    const user = users.find((user) => user.email === dto.email);
-    // Знаходимо юзера за email в БД (хоча це все можна було винести в окремий репозиторій і назвати його наприклад user.repositories
+    const user = await userRepository.getByEmail(dto.email);
+    // Знаходимо юзера за email в БД
+    // все те саме можна було б зробити і ось так, але це було б не коректно, бо захламляло б код,
+    // подібні запити мають бути в окремому файлі у обгортці типу userRepository
+    // const users = await userService.getUsers(); // Це повертає масив користувачів
+    // const user = users.find((user) => user.email === dto.email);
     // якщо email що введено юзером ==== email з БД, то витягаємо дані по цьому юзеру
     if (!user) {
       throw new ApiError("User not found", 404);
