@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { ObjectSchema } from "joi";
 
 import { ApiError } from "../errors/api.error";
-import { User } from "../models/user.model";
+import { userRepository } from "../repositories/user.repository";
 
 class UserMiddleware {
   // Валідація даних користувача
@@ -23,9 +23,8 @@ class UserMiddleware {
     res: Response,
     next: NextFunction,
   ): Promise<void> {
-    const userId = req.params.userId;
-    const user = await User.findById(userId);
-    //перевіряємо через пошук (метод findById) чи є в нас в БД користувач з вказаним userId
+    const user = await userRepository.getById(req.params.userId);
+    //перевіряємо через пошук (метод findById в userRepository.getById) чи є в нас в БД користувач з вказаним userId
 
     if (!user) {
       throw new ApiError("User not found", 400);
