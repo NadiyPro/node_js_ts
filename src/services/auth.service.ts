@@ -1,9 +1,11 @@
+import { EmailTypeEnum } from "../enums/email.enum";
 import { ApiError } from "../errors/api.error";
 import { ITokenPair, ITokenPayload } from "../interfaces/IToken";
 import { ISignIn, IUser } from "../interfaces/IUser";
 import { User } from "../models/user.model";
 import { tokenRepository } from "../repositories/token.repository";
 import { userRepository } from "../repositories/user.repository";
+import { emailService } from "./email.service";
 import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
 
@@ -25,6 +27,11 @@ class AuthService {
     await tokenRepository.create({ ...tokens, _userId: user._id });
     // відправимо отриману пару токенів на збереження в наш БД через обгортку для спілкування з БД
     // (щоб те що ми хочемо пропускалось через модель (в якій є схема) і записувалось у відповідні поля БД)
+
+    await emailService.sendMail(EmailTypeEnum.WELCOME, "siroviyn13@gmail.com", {
+      name: user.name,
+    });
+
     return { user, tokens };
   } // в singUp ми створюємо нового юзера (логінація) та видаємо йому токени, записуємо в БД
 
