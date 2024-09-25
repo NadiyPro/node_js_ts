@@ -27,11 +27,7 @@ class AuthService {
     await tokenRepository.create({ ...tokens, _userId: user._id });
     // відправимо отриману пару токенів на збереження в наш БД через обгортку для спілкування з БД
     // (щоб те що ми хочемо пропускалось через модель (в якій є схема) і записувалось у відповідні поля БД)
-
-    await emailService.sendMail(EmailTypeEnum.WELCOME, "siroviyn13@gmail.com", {
-      name: user.name,
-    });
-
+    await emailService.sendMail(EmailTypeEnum.WELCOME, "siroviyn13@gmail.com", { name: user.name });
     return { user, tokens };
   } // в singUp ми створюємо нового юзера (логінація) та видаємо йому токени, записуємо в БД
 
