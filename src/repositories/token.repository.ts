@@ -11,8 +11,12 @@ class TokenRepository {
   } // шукаємо / дістаємо один запис у колекції Token в БД відповідно до переданих параметрів,
   // тобто шукаємо по значанню, що містяться в access / refresh токенах юзера і дістаєму інфо по ньому з БД
 
-  public async deleteByParams(params: Partial<IToken>): Promise<void> {
+  public async deleteOneByParams(params: Partial<IToken>): Promise<void> {
     await Token.deleteOne(params);
+  }
+
+  public async deleteManyByParams(params: Partial<IToken>): Promise<void> {
+    await Token.deleteMany(params);
   }
 }
 

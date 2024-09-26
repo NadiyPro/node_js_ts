@@ -68,7 +68,7 @@ class AuthService {
     refreshToken: string,
     payload: ITokenPayload,
   ): Promise<ITokenPair> {
-    await tokenRepository.deleteByParams({ refreshToken });
+    await tokenRepository.deleteOneByParams({ refreshToken });
     // видаляємо стару пару токенів, які містив у собі старий refreshToken
     const tokens = tokenService.generateTokens({
       userId: payload.userId,
@@ -79,6 +79,24 @@ class AuthService {
     return tokens;
   }
 
+  public async logout(
+    jwtPayload: ITokenPayload,
+    tokenId: string,
+  ): Promise<void> {
+    const user = await userRepository.getById(jwtPayload.userId); // знаходимо юзера в БД по його userId
+    await tokenRepository.deleteOneByParams({ _id: tokenId }); // видаляємо лише одну пару токенів юзера
+    await emailService.sendMail(EmailTypeEnum.LOGOUT, "siroviyn13@gmail.com", {
+      name: user.name,
+    }); // відправляємо листа юзеру
+  }
+
+  public async logoutAll(jwtPayload: ITokenPayload): Promise<void> {
+    const user = await userRepository.getById(jwtPayload.userId); // знаходимо юзера в БД по його userId
+    await tokenRepository.deleteManyByParams({ _userId: jwtPayload.userId }); // видаляємо всього юзера
+    await emailService.sendMail(EmailTypeEnum.LOGOUT, user.email, {
+      name: user.name,
+    }); // відправляємо листа юзеру
+  }
   // private async isEmailExistOrThrow(email: string): Promise<void> {
   //   const user = await userRepository.getByEmail(email);
   //   if (user) {

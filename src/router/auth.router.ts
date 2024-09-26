@@ -14,7 +14,7 @@ router.post(
 );
 router.post(
   "/sign-in",
-  // userMiddleware.validateUser(UserValidator.create),
+  userMiddleware.validateUser(UserValidator.signIn),
   authControllers.signIn,
 );
 router.post(
@@ -22,4 +22,17 @@ router.post(
   authMiddleware.checkRefreshToken,
   authControllers.refresh,
 ); // цей роут призначений для того, щоб видати нову пару токенів
+
+router.post("/logout", authMiddleware.checkAccessToken, authControllers.logout);
+// видалити одну пару токенів юзера
+
+router.post(
+  "/logout/all",
+  authMiddleware.checkAccessToken,
+  authControllers.logoutAll,
+);
+// видалити всі токени видані юзеру,
+// напркилад коли юзер заходив з різних дивайсів, відповідно в нього буде декілька пар токенів
+// кожна пара токенів на свій дивайс
+
 export const authRouter = router;

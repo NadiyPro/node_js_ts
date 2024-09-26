@@ -28,4 +28,9 @@ export class UserValidator {
     password: this.password,
     phone: this.phone,
   });
+
+  public static signIn = joi.object({
+    email: this.email.required(),
+    password: this.password.required(),
+  });
 }
