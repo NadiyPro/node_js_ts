@@ -4,6 +4,8 @@ import { TokenTypeEnum } from "../enums/token.enum";
 import { ApiError } from "../errors/api.error";
 import { tokenRepository } from "../repositories/token.repository";
 import { tokenService } from "../services/token.service";
+import {IResetPasswordSet} from "../interfaces/IUser";
+import {actionTokenRepository} from "../repositories/action-token.repository";
 
 class AuthMiddleware {
   public async checkAccessToken(
@@ -65,6 +67,29 @@ class AuthMiddleware {
       }
       req.res.locals.jwtPayload = payload; // обєкт який був закодований, в нашому випадку це userId та role
       req.res.locals.refreshToken = refreshToken; // перекинемо наш refresh токен в контролер
+      next();
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async checkActionToken(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const { token } = req.body as IResetPasswordSet; // дістаємо токен з body
+      const payload = tokenService.verifyToken(token, TokenTypeEnum.ACCESS);
+      // відправляємо на верифікацію токен і вказуємо його тип
+
+      const tokenEntity = await actionTokenRepository.getByToken(token);
+      // шукаємо інфо по token та дістаємо з БД
+      if (!tokenEntity) {
+        throw new ApiError("Token is not valid", 401);
+      }
+      req.res.locals.jwtPayload = payload;
+      // зберігаємо в locals перевірений токен для прокилання його далі в контролер
       next();
     } catch (e) {
       next(e);

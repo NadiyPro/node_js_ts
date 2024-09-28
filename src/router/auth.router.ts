@@ -35,10 +35,10 @@ router.post(
 // напркилад коли юзер заходив з різних дивайсів, відповідно в нього буде декілька пар токенів
 // кожна пара токенів на свій дивайс
 router.post("/forgot-password", authControllers.forgotPasswordSendEmail); // підтверджує
-// router.put(
-//   "/forgot-password",
-//   authMiddleware.checkActionToken,
-//   authControllers.forgotPasswordSet,
-// ); // відправляє
+router.put(
+  "/forgot-password",
+  authMiddleware.checkActionToken,
+  authControllers.forgotPasswordSet,
+); // відправляє
 
 export const authRouter = router;

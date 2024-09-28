@@ -2,7 +2,7 @@ import { ActionTokenTypeEnum } from "../enums/action-token-type.enum";
 import { EmailTypeEnum } from "../enums/email.enum";
 import { ApiError } from "../errors/api.error";
 import { ITokenPair, ITokenPayload } from "../interfaces/IToken";
-import { IResetPasswordSend, ISignIn, IUser } from "../interfaces/IUser";
+import {IResetPasswordSend, IResetPasswordSet, ISignIn, IUser} from "../interfaces/IUser";
 import { User } from "../models/user.model";
 import { actionTokenRepository } from "../repositories/action-token.repository";
 import { tokenRepository } from "../repositories/token.repository";
@@ -132,19 +132,19 @@ class AuthService {
     // щоб перевірити чи все вірно зробили, чи приходять листи
   }
 
-  // public async forgotPasswordSet(
-  //   dto: IResetPasswordSet,
-  //   jwtPayload: ITokenPayload,
-  // ): Promise<void> {
-  //   const password = await passwordService.hashPassword(dto.password);
-  //   await userRepository.updateById(jwtPayload.userId, { password });
-  //
-  //   await actionTokenRepository.deleteManyByParams({
-  //     _userId: jwtPayload.userId,
-  //     type: ActionTokenTypeEnum.FORGOT_PASSWORD,
-  //   });
-  //   await tokenRepository.deleteManyByParams({ _userId: jwtPayload.userId });
-  // }
+  public async forgotPasswordSet(
+    dto: IResetPasswordSet,
+    jwtPayload: ITokenPayload,
+  ): Promise<void> {
+    const password = await passwordService.hashPassword(dto.password);
+    await userRepository.updateById(jwtPayload.userId, { password });
+
+    await actionTokenRepository.deleteManyByParams({
+      _userId: jwtPayload.userId,
+      type: ActionTokenTypeEnum.FORGOT_PASSWORD,
+    });
+    await tokenRepository.deleteManyByParams({ _userId: jwtPayload.userId });
+  }
   // хешуємо пароль, оновлюємо в БД пароль на новий,
   // видаляємо раніше згенерований нами для листа екшн токен,
   // видаляємо старі токени юзера
