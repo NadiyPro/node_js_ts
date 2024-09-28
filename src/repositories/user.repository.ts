@@ -18,8 +18,12 @@ class UserRepository {
     return await User.findOne({ email }).select("+password");
   }
 
-  public async updateById(userId: string, dto: IUser): Promise<IUser> {
+  public async updateById(userId: string, dto: Partial<IUser>): Promise<IUser> {
     return await User.findByIdAndUpdate(userId, dto, { new: true });
+    //Partial<T> у TypeScript — це утилітний тип,
+    // який перетворює всі властивості типу T на НЕобов'язкові.
+    // коли вам не потрібно надавати всі дані об'єкта,
+    // а тільки ту частину, яку хочете змінити або оновити.
   }
 
   public async deleteById(userId: string): Promise<void> {
