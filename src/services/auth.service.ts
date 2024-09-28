@@ -2,7 +2,12 @@ import { ActionTokenTypeEnum } from "../enums/action-token-type.enum";
 import { EmailTypeEnum } from "../enums/email.enum";
 import { ApiError } from "../errors/api.error";
 import { ITokenPair, ITokenPayload } from "../interfaces/IToken";
-import {IResetPasswordSend, IResetPasswordSet, ISignIn, IUser} from "../interfaces/IUser";
+import {
+  IResetPasswordSend,
+  IResetPasswordSet,
+  ISignIn,
+  IUser,
+} from "../interfaces/IUser";
 import { User } from "../models/user.model";
 import { actionTokenRepository } from "../repositories/action-token.repository";
 import { tokenRepository } from "../repositories/token.repository";
@@ -147,7 +152,10 @@ class AuthService {
   }
   // хешуємо пароль, оновлюємо в БД пароль на новий,
   // видаляємо раніше згенерований нами для листа екшн токен,
-  // видаляємо старі токени юзера
+  // потенційно, випадково ми могли випадково видати декілька токенів,
+  // тому видаляємо всі токени по вказаному юзеру видані саме по FORGOT_PASSWORD екшену,
+  // таким чином, коли буде змінено пароль,
+  // всі сессії будуть розірвані бо ми повидаляємо всі токени
 
   // private async isEmailExistOrThrow(email: string): Promise<void> {
   //   const user = await userRepository.getByEmail(email);
