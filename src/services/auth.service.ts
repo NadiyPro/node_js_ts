@@ -1,8 +1,10 @@
+import { ActionTokenTypeEnum } from "../enums/action-token-type.enum";
 import { EmailTypeEnum } from "../enums/email.enum";
 import { ApiError } from "../errors/api.error";
 import { ITokenPair, ITokenPayload } from "../interfaces/IToken";
-import { ISignIn, IUser } from "../interfaces/IUser";
+import { IResetPasswordSend, ISignIn, IUser } from "../interfaces/IUser";
 import { User } from "../models/user.model";
+import { actionTokenRepository } from "../repositories/action-token.repository";
 import { tokenRepository } from "../repositories/token.repository";
 import { userRepository } from "../repositories/user.repository";
 import { emailService } from "./email.service";
@@ -97,6 +99,56 @@ class AuthService {
       name: user.name,
     }); // відправляємо листа юзеру
   }
+
+  public async forgotPasswordSendEmail(dto: IResetPasswordSend): Promise<void> {
+    const user = await userRepository.getByEmail(dto.email);
+    if (!user) {
+      throw new ApiError("User not found", 404);
+    }
+
+    const token = tokenService.generateActionTokens(
+      { userId: user._id, role: user.role },
+      ActionTokenTypeEnum.FORGOT_PASSWORD,
+    );
+    await actionTokenRepository.create({
+      type: ActionTokenTypeEnum.FORGOT_PASSWORD,
+      _userId: user._id,
+      token,
+    }); // в _userId записуємо user._id,
+    // щоб можна було зробити звязку двох табл по id юзера
+    // ( в одній табл ідентифікатор юзера знаходиться в _id, в другій в userId)
+
+    await emailService.sendMail(
+      EmailTypeEnum.FORGOT_PASSWORD,
+      "siroviyn13@gmail.com",
+      {
+        name: user.name,
+        email: user.email,
+        actionToken: token,
+      },
+    );
+    // відправляємо юзерові на пошту листа з лінкою в яку вшитий токен для відновлення паролю
+    // для тесту, замість user.email можемо вказати свою пошту,
+    // щоб перевірити чи все вірно зробили, чи приходять листи
+  }
+
+  // public async forgotPasswordSet(
+  //   dto: IResetPasswordSet,
+  //   jwtPayload: ITokenPayload,
+  // ): Promise<void> {
+  //   const password = await passwordService.hashPassword(dto.password);
+  //   await userRepository.updateById(jwtPayload.userId, { password });
+  //
+  //   await actionTokenRepository.deleteManyByParams({
+  //     _userId: jwtPayload.userId,
+  //     type: ActionTokenTypeEnum.FORGOT_PASSWORD,
+  //   });
+  //   await tokenRepository.deleteManyByParams({ _userId: jwtPayload.userId });
+  // }
+  // хешуємо пароль, оновлюємо в БД пароль на новий,
+  // видаляємо раніше згенерований нами для листа екшн токен,
+  // видаляємо старі токени юзера
+
   // private async isEmailExistOrThrow(email: string): Promise<void> {
   //   const user = await userRepository.getByEmail(email);
   //   if (user) {

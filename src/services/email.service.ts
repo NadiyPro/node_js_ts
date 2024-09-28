@@ -41,7 +41,10 @@ class EmailService {
   ): Promise<void> {
     const { subject, template } = emailConstants[type];
 
-    context["frontUrl"] = config.APP_FRONT_URL; // це неам потрібно для рідерект
+    context["frontUrl"] = config.APP_FRONT_URL;
+    // тут ми вказуємо, що в нас буде змінна frontUrl,
+    // яка буде дорівнювати нашому хост (http://localhost:3001)
+    // *хост беремо з .env
     const options = { to, subject, template, context };
     await this.transporter.sendMail(options);
   }

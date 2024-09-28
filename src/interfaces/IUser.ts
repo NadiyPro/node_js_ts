@@ -13,3 +13,14 @@ export interface IUser {
 }
 
 export type ISignIn = Pick<IUser, "email" | "password">;
+// Pick<T, K> — це утилітний тип TypeScript, який дозволяє створити новий тип,
+// вибравши тільки певні властивості з існуючого типу.
+// T — це об'єктний тип, з якого вибираються властивості (IUser)
+// K — це список (ключі) властивостей, які ми хочемо вибрати ("email" | "password")
+//Pick<IUser, "email" | "password"> — означає,
+// що ми беремо тільки властивості "email" і "password" з інтерфейсу IUser.
+// Новий тип ISignIn буде містити лише ці дві властивості.
+
+export type IResetPasswordSend = Pick<IUser, "email">;
+
+export type IResetPasswordSet = Pick<IUser, "password"> & { token: string };
