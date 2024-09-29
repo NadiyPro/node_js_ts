@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 
 import { ITokenPayload } from "../interfaces/IToken";
 import {
-  IResetPasswordSend, IResetPasswordSet,
-  // IResetPasswordSet,
+  IResetPasswordSend,
+  IResetPasswordSet,
   IUser,
 } from "../interfaces/IUser";
 import { authService } from "../services/auth.service";
