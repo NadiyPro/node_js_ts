@@ -34,9 +34,20 @@ class AuthService {
     await tokenRepository.create({ ...tokens, _userId: user._id });
     // відправимо отриману пару токенів на збереження в наш БД через обгортку для спілкування з БД
     // (щоб те що ми хочемо пропускалось через модель (в якій є схема) і записувалось у відповідні поля БД)
+    const token = tokenService.generateActionTokens(
+      { userId: user._id, role: user.role },
+      ActionTokenTypeEnum.VERIFY_EMAIL,
+    ); // генеруємо actionToken для конкретного юзера
+    await actionTokenRepository.create({
+      type: ActionTokenTypeEnum.VERIFY_EMAIL,
+      _userId: user._id,
+      token,
+    }); // записуємо згенерований actionToken токен в БД
+
     await emailService.sendMail(EmailTypeEnum.WELCOME, user.email, {
       name: user.name,
-    });
+      actionToken: token,
+    }); // відправляємо лист "welcome" у якому в лінку VERIFY зашит наш actionToken
     return { user, tokens };
   } // в singUp ми створюємо нового юзера (логінація) та видаємо йому токени, записуємо в БД
 
