@@ -162,7 +162,13 @@ class AuthService {
     // таким чином коли буде змінено пароль,
     // всі сессії будуть розірвані бо ми повидаляємо всі токени
   }
-
+  public async verify(jwtPayload: ITokenPayload): Promise<void> {
+    await userRepository.updateById(jwtPayload.userId, { isVerified: true });
+    await actionTokenRepository.deleteManyByParams({
+      _userId: jwtPayload.userId,
+      type: ActionTokenTypeEnum.VERIFY_EMAIL,
+    });
+  }
   // private async isEmailExistOrThrow(email: string): Promise<void> {
   //   const user = await userRepository.getByEmail(email);
   //   if (user) {

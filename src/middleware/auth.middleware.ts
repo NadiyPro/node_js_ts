@@ -3,7 +3,6 @@ import { NextFunction, Request, Response } from "express";
 import { ActionTokenTypeEnum } from "../enums/action-token-type.enum";
 import { TokenTypeEnum } from "../enums/token.enum";
 import { ApiError } from "../errors/api.error";
-import { IResetPasswordSet } from "../interfaces/IUser";
 import { actionTokenRepository } from "../repositories/action-token.repository";
 import { tokenRepository } from "../repositories/token.repository";
 import { tokenService } from "../services/token.service";
@@ -74,30 +73,28 @@ class AuthMiddleware {
     }
   }
 
-  public async checkActionToken(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) {
-    try {
-      const { token } = req.body as IResetPasswordSet; // дістаємо токен з body
-      const payload = tokenService.verifyToken(
-        token,
-        ActionTokenTypeEnum.FORGOT_PASSWORD,
-      );
-      // відправляємо на верифікацію токен і вказуємо його тип
+  public checkActionToken(type: ActionTokenTypeEnum) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const token = req.body.token as string; // дістаємо токен з body
+        if (!token) {
+          throw new ApiError("Token is not provided", 401);
+        }
+        const payload = tokenService.verifyToken(token, type);
+        // відправляємо на верифікацію токен і вказуємо його тип
 
-      const tokenEntity = await actionTokenRepository.getByToken(token);
-      // шукаємо інфо по token та дістаємо з БД
-      if (!tokenEntity) {
-        throw new ApiError("Token is not valid", 401);
+        const tokenEntity = await actionTokenRepository.getByToken(token);
+        // шукаємо інфо по token та дістаємо з БД
+        if (!tokenEntity) {
+          throw new ApiError("Token is not valid", 401);
+        }
+        req.res.locals.jwtPayload = payload;
+        // зберігаємо в locals перевірений токен для прокилання його далі в контролер
+        next();
+      } catch (e) {
+        next(e);
       }
-      req.res.locals.jwtPayload = payload;
-      // зберігаємо в locals перевірений токен для прокилання його далі в контролер
-      next();
-    } catch (e) {
-      next(e);
-    }
+    };
   }
 }
 

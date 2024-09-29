@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { authControllers } from "../controllers/auth.controllers";
+import { ActionTokenTypeEnum } from "../enums/action-token-type.enum";
 import { authMiddleware } from "../middleware/auth.middleware";
 import { userMiddleware } from "../middleware/user.middleware";
 import { UserValidator } from "../validators/user.validator";
@@ -34,11 +35,18 @@ router.post(
 // видалити всі токени видані юзеру,
 // напркилад коли юзер заходив з різних дивайсів, відповідно в нього буде декілька пар токенів
 // кожна пара токенів на свій дивайс
-router.post("/forgot-password", authControllers.forgotPasswordSendEmail); // підтверджує
+router.post("/forgot-password", authControllers.forgotPasswordSendEmail);
+// выдправляэмо на email лінку з actionToken, щоб юзер міг ввести новий пароль
 router.put(
   "/forgot-password",
   authMiddleware.checkActionToken,
   authControllers.forgotPasswordSet,
-); // відправляє
-
+); // забираємо новий пароль що ввів юзер таоновлюємо інфо про пароль в БД
+router.post(
+  "/verify",
+  authMiddleware.checkActionToken(ActionTokenTypeEnum.VERIFY_EMAIL),
+  authControllers.verify,
+);
+// в sign-up ми перейшли по лінкі VERIFY в яку зашит наш actionToken,
+// а тут "/verify" вже ми верифікуємо email
 export const authRouter = router;
