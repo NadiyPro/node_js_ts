@@ -4,6 +4,7 @@ import { ITokenPayload } from "../interfaces/IToken";
 import {
   IResetPasswordSend,
   IResetPasswordSet,
+  ISignIn,
   IUser,
 } from "../interfaces/IUser";
 import { authService } from "../services/auth.service";
@@ -25,7 +26,7 @@ class AuthControllers {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const dto = req.body as IUser;
+      const dto = req.body as ISignIn;
       const newUser = await authService.signIn(dto);
       res.status(201).json(newUser);
     } catch (e) {
