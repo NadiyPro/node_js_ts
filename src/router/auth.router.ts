@@ -39,7 +39,7 @@ router.post("/forgot-password", authControllers.forgotPasswordSendEmail);
 // выдправляэмо на email лінку з actionToken, щоб юзер міг ввести новий пароль
 router.put(
   "/forgot-password",
-  authMiddleware.checkActionToken,
+  authMiddleware.checkActionToken(ActionTokenTypeEnum.FORGOT_PASSWORD),
   authControllers.forgotPasswordSet,
 ); // забираємо новий пароль що ввів юзер таоновлюємо інфо про пароль в БД
 router.post(
