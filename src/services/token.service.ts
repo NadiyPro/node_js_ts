@@ -17,7 +17,10 @@ class TokenService {
     return { accessToken, refreshToken };
   } // створюємо токени
 
-  public verifyToken(token: string, type: TokenTypeEnum): ITokenPayload {
+  public verifyToken(
+    token: string,
+    type: TokenTypeEnum | ActionTokenTypeEnum,
+  ): ITokenPayload {
     try {
       let secret: string;
       switch (type) {
@@ -28,6 +31,13 @@ class TokenService {
         case TokenTypeEnum.REFRESH:
           secret = config.JWT_REFRESH_SECRET;
           break;
+
+        case ActionTokenTypeEnum.FORGOT_PASSWORD:
+          secret = config.JWT_REFRESH_SECRET;
+          break;
+
+        default:
+          throw new ApiError("Invalid token type", 400);
       }
       // if (type === TokenTypeEnum.ACCESS) {
       //   secret = config.JWT_ACCESS_SECRET;

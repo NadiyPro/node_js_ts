@@ -34,7 +34,7 @@ class AuthService {
     await tokenRepository.create({ ...tokens, _userId: user._id });
     // відправимо отриману пару токенів на збереження в наш БД через обгортку для спілкування з БД
     // (щоб те що ми хочемо пропускалось через модель (в якій є схема) і записувалось у відповідні поля БД)
-    await emailService.sendMail(EmailTypeEnum.WELCOME, "siroviyn13@gmail.com", {
+    await emailService.sendMail(EmailTypeEnum.WELCOME, user.email, {
       name: user.name,
     });
     return { user, tokens };
@@ -92,7 +92,7 @@ class AuthService {
   ): Promise<void> {
     const user = await userRepository.getById(jwtPayload.userId); // знаходимо юзера в БД по його userId
     await tokenRepository.deleteOneByParams({ _id: tokenId }); // видаляємо лише одну пару токенів юзера
-    await emailService.sendMail(EmailTypeEnum.LOGOUT, "siroviyn13@gmail.com", {
+    await emailService.sendMail(EmailTypeEnum.LOGOUT, user.email, {
       name: user.name,
     }); // відправляємо листа юзеру
   }
@@ -123,38 +123,46 @@ class AuthService {
     // щоб можна було зробити звязку двох табл по id юзера
     // ( в одній табл ідентифікатор юзера знаходиться в _id, в другій в userId)
 
-    await emailService.sendMail(
-      EmailTypeEnum.FORGOT_PASSWORD,
-      "siroviyn13@gmail.com",
-      {
-        name: user.name,
-        email: user.email,
-        actionToken: token,
-      },
-    );
+    await emailService.sendMail(EmailTypeEnum.FORGOT_PASSWORD, user.email, {
+      name: user.name,
+      email: user.email,
+      actionToken: token,
+    });
     // відправляємо юзерові на пошту листа з лінкою в яку вшитий токен для відновлення паролю
     // для тесту, замість user.email можемо вказати свою пошту,
     // щоб перевірити чи все вірно зробили, чи приходять листи
   }
-
   public async forgotPasswordSet(
     dto: IResetPasswordSet,
     jwtPayload: ITokenPayload,
   ): Promise<void> {
-    const password = await passwordService.hashPassword(dto.password); // хешуємо пароль
-    await userRepository.updateById(jwtPayload.userId, { password }); //  оновлюємо в БД пароль на новий
+    const password = await passwordService.hashPassword(dto.password);
+    await userRepository.updateById(jwtPayload.userId, { password });
 
     await actionTokenRepository.deleteManyByParams({
       _userId: jwtPayload.userId,
       type: ActionTokenTypeEnum.FORGOT_PASSWORD,
     });
-    // потенційно, випадково ми могли випадково видати декілька токенів,
-    // тому видаляємо всі токени по вказаному юзеру видані саме по FORGOT_PASSWORD екшену
     await tokenRepository.deleteManyByParams({ _userId: jwtPayload.userId });
-    // видаляємо всі токени видані даному юзеру,
-    // таким чином коли буде змінено пароль,
-    // всі сессії будуть розірвані бо ми повидаляємо всі токени
   }
+  // public async forgotPasswordSet(
+  //   dto: IResetPasswordSet,
+  //   jwtPayload: ITokenPayload,
+  // ): Promise<void> {
+  //   const password = await passwordService.hashPassword(dto.password); // хешуємо пароль
+  //   await userRepository.updateById(jwtPayload.userId, { password }); //  оновлюємо в БД пароль на новий
+  //
+  //   await actionTokenRepository.deleteManyByParams({
+  //     _userId: jwtPayload.userId,
+  //     type: ActionTokenTypeEnum.FORGOT_PASSWORD,
+  //   });
+  //   // потенційно, випадково ми могли випадково видати декілька токенів,
+  //   // тому видаляємо всі токени по вказаному юзеру видані саме по FORGOT_PASSWORD екшену
+  //   await tokenRepository.deleteManyByParams({ _userId: jwtPayload.userId });
+  //   // видаляємо всі токени видані даному юзеру,
+  //   // таким чином коли буде змінено пароль,
+  //   // всі сессії будуть розірвані бо ми повидаляємо всі токени
+  // }
 
   // private async isEmailExistOrThrow(email: string): Promise<void> {
   //   const user = await userRepository.getByEmail(email);
