@@ -149,7 +149,7 @@ class AuthService {
       type: ActionTokenTypeEnum.FORGOT_PASSWORD,
     });
     // потенційно, випадково ми могли випадково видати декілька токенів,
-    // тому видаляємо всі токени по вказаному юзеру видані саме по FORGOT_PASSWORD екшену,
+    // тому видаляємо всі токени по вказаному юзеру видані саме по FORGOT_PASSWORD екшену
     await tokenRepository.deleteManyByParams({ _userId: jwtPayload.userId });
     // видаляємо всі токени видані даному юзеру,
     // таким чином коли буде змінено пароль,
