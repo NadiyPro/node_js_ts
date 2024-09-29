@@ -23,6 +23,12 @@ class AuthMiddleware {
       }
       const accessToken = header.split("Bearer ")[1];
       // дістанемо токен доступу з Authorization, беремо другий елемент масиву, тобто все, що йде після слова "Bearer "
+      const payload = tokenService.verifyToken(
+        accessToken,
+        TokenTypeEnum.ACCESS,
+      ); //  перевіряємо токен, чи був він створений з використанням конкретного секретного ключа і чи не закінчився термін його дії
+      // тут використовуємо саме verify, тому що він перевіряє secret (ключі, які сховані в .env та термін дії),
+      // а decode ми тут НЕ використовуємо, бо він лише декодує БЕЗ перевірки підпису або дійсності токена
 
       const pair = await tokenRepository.findByParams({ accessToken });
       if (!pair) {
@@ -30,12 +36,6 @@ class AuthMiddleware {
       }
       // шукаємо по значенню, що містяться в access / refresh токенах юзера і дістаємо інфо по ньому з БД
 
-      const payload = tokenService.verifyToken(
-        accessToken,
-        TokenTypeEnum.ACCESS,
-      ); //  перевіряємо токен, чи був він створений з використанням конкретного секретного ключа і чи не закінчився термін його дії
-      // тут використовуємо саме verify, тому що він перевіряє secret (ключі, які сховані в .env та термін дії),
-      // а decode ми тут НЕ використовуємо, бо він лише декодує БЕЗ перевірки підпису або дійсності токена
       req.res.locals.tokenId = pair._id;
       // додамо / запишемо до нашої пари токенів _id, щоб потім по цьому _id ми могли видалити пару токенів
       // де tokenId — це нове поле, яке додається в locals, в яке ми і записуватимемо _id

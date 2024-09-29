@@ -33,7 +33,7 @@ class TokenService {
           break;
 
         case ActionTokenTypeEnum.FORGOT_PASSWORD:
-          secret = config.JWT_REFRESH_SECRET;
+          secret = config.ACTION_FORGOT_PASSWORD_SECRET;
           break;
 
         default:

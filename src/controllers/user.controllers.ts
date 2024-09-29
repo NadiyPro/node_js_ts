@@ -20,8 +20,9 @@ class UserController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const user = (req as any).user; // Доступ до користувача через req
-      res.json(user); // Відправляємо знайденого користувача у відповідь
+      const userId = req.params.userId;
+      const result = await userService.getById(userId); // Доступ до користувача через req
+      res.json(result); // Відправляємо знайденого користувача у відповідь
     } catch (e) {
       next(e);
     }
