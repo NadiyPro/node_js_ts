@@ -132,37 +132,25 @@ class AuthService {
     // для тесту, замість user.email можемо вказати свою пошту,
     // щоб перевірити чи все вірно зробили, чи приходять листи
   }
+
   public async forgotPasswordSet(
     dto: IResetPasswordSet,
     jwtPayload: ITokenPayload,
   ): Promise<void> {
-    const password = await passwordService.hashPassword(dto.password);
-    await userRepository.updateById(jwtPayload.userId, { password });
+    const password = await passwordService.hashPassword(dto.password); // хешуємо пароль
+    await userRepository.updateById(jwtPayload.userId, { password }); //  оновлюємо в БД пароль на новий
 
     await actionTokenRepository.deleteManyByParams({
       _userId: jwtPayload.userId,
       type: ActionTokenTypeEnum.FORGOT_PASSWORD,
     });
+    // потенційно, випадково ми могли випадково видати декілька токенів,
+    // тому видаляємо всі токени по вказаному юзеру видані саме по FORGOT_PASSWORD екшену
     await tokenRepository.deleteManyByParams({ _userId: jwtPayload.userId });
+    // видаляємо всі токени видані даному юзеру,
+    // таким чином коли буде змінено пароль,
+    // всі сессії будуть розірвані бо ми повидаляємо всі токени
   }
-  // public async forgotPasswordSet(
-  //   dto: IResetPasswordSet,
-  //   jwtPayload: ITokenPayload,
-  // ): Promise<void> {
-  //   const password = await passwordService.hashPassword(dto.password); // хешуємо пароль
-  //   await userRepository.updateById(jwtPayload.userId, { password }); //  оновлюємо в БД пароль на новий
-  //
-  //   await actionTokenRepository.deleteManyByParams({
-  //     _userId: jwtPayload.userId,
-  //     type: ActionTokenTypeEnum.FORGOT_PASSWORD,
-  //   });
-  //   // потенційно, випадково ми могли випадково видати декілька токенів,
-  //   // тому видаляємо всі токени по вказаному юзеру видані саме по FORGOT_PASSWORD екшену
-  //   await tokenRepository.deleteManyByParams({ _userId: jwtPayload.userId });
-  //   // видаляємо всі токени видані даному юзеру,
-  //   // таким чином коли буде змінено пароль,
-  //   // всі сессії будуть розірвані бо ми повидаляємо всі токени
-  // }
 
   // private async isEmailExistOrThrow(email: string): Promise<void> {
   //   const user = await userRepository.getByEmail(email);
