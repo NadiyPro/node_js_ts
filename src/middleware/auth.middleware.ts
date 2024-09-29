@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from "express";
 
 import { TokenTypeEnum } from "../enums/token.enum";
 import { ApiError } from "../errors/api.error";
+import { IResetPasswordSet } from "../interfaces/IUser";
+import { actionTokenRepository } from "../repositories/action-token.repository";
 import { tokenRepository } from "../repositories/token.repository";
 import { tokenService } from "../services/token.service";
-import {IResetPasswordSet} from "../interfaces/IUser";
-import {actionTokenRepository} from "../repositories/action-token.repository";
 
 class AuthMiddleware {
   public async checkAccessToken(
