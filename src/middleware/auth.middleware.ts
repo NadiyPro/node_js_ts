@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+import { ActionTokenTypeEnum } from "../enums/action-token-type.enum";
 import { TokenTypeEnum } from "../enums/token.enum";
 import { ApiError } from "../errors/api.error";
 import { IResetPasswordSet } from "../interfaces/IUser";
@@ -80,7 +81,10 @@ class AuthMiddleware {
   ) {
     try {
       const { token } = req.body as IResetPasswordSet; // дістаємо токен з body
-      const payload = tokenService.verifyToken(token, TokenTypeEnum.ACCESS);
+      const payload = tokenService.verifyToken(
+        token,
+        ActionTokenTypeEnum.FORGOT_PASSWORD,
+      );
       // відправляємо на верифікацію токен і вказуємо його тип
 
       const tokenEntity = await actionTokenRepository.getByToken(token);
