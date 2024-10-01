@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import * as mongoose from "mongoose";
 
 import { config } from "./config/configs";
+import { cronRunner } from "./crons";
 import { ApiError } from "./errors/api.error";
 import { authRouter } from "./router/auth.router";
 import { userRouter } from "./router/router";
@@ -25,6 +26,10 @@ app.use("*", (error: any, req: Request, res: Response, next: NextFunction) => {
 
 // на якому порті відкриваємо (номер хосту)
 app.listen(config.APP_PORT, async () => {
+  cronRunner();
+  // запускаємо файл index.ts з cron
+  // (cron - це тула, яка дає нам змогу запустити якийсь функціонал / метод,
+  // через якийсь певний період часу)
   await mongoose.connect(config.MONGO_URI);
   console.log(
     `Server is running on https://${config.APP_HOST}:${config.APP_PORT}`,
