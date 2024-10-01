@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/auth", authRouter);
 app.use("/users1", userRouter);
 
-//обробка помилок які ми витягнули сюди (на верхній рівень) через next()
+//обробка помилок, які ми витягнули сюди (на верхній рівень) через next()
 app.use("*", (error: any, req: Request, res: Response, next: NextFunction) => {
   // Перевіряємо, чи це інстанція ApiError
   if (error instanceof ApiError) {
