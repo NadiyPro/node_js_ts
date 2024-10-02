@@ -1,13 +1,6 @@
 import dayjs, { ManipulateType } from "dayjs";
 
 class TimeHelper {
-  public subtractByParams(value: number, unit: ManipulateType): Date {
-    return dayjs().subtract(value, unit).toDate();
-    //віднімемо (subtract) від нашого теперішнього часу,
-    // витягнути нами через парсинг (parseConfigString) кількість (value) днів (unit):
-    // dayjs().subtract(value, unit).toDate();
-  }
-
   public parseConfigString(string: string): {
     value: number;
     unit: ManipulateType;
@@ -22,6 +15,13 @@ class TimeHelper {
     return { value: parseInt(value), unit: unit as ManipulateType };
     // parseInt(value): Ця функція перетворює рядок,
     // що містить число, на ціле число (типу number).
+  }
+
+  public subtractByParams(value: number, unit: ManipulateType): Date {
+    return dayjs().subtract(value, unit).toDate();
+    //віднімемо (subtract) від нашого теперішнього часу,
+    // витягнути нами через парсинг (parseConfigString) кількість (value) днів (unit):
+    // dayjs().subtract(value, unit).toDate();
   }
 }
 

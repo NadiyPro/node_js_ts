@@ -14,10 +14,11 @@ const handler = async () => {
     // щоб можна було зробити потім розрахунок
 
     const date = timeHelper.subtractByParams(value, unit);
-    // //віднімемо (subtract) від нашого теперішнього часу,
-    // витягнути нами через парсинг (parseConfigString) кількість (value) днів (unit)
+    // віднімемо (subtract) від нашого теперішнього часу,
+    // витягнутий нами через парсинг (parseConfigString) кількість (value) днів (unit)
     const deletedCount = await tokenRepository.deleteBeforeDate(date);
-    // видаляємо токени з БД старше 10 днів
+    // видаляємо токени з БД старше 10 днів,
+    // та у відповідь отримуємо кількість видалених токенів deletedCount
     console.log(`Deleted ${deletedCount} old tokens`);
   } catch (error) {
     console.error(error);
