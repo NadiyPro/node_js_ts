@@ -80,7 +80,7 @@ class AuthService {
       role: user.role,
     });
     await tokenRepository.create({ ...tokens, _userId: user._id });
-    return { user, tokens };
+    return { user, tokens }; // виводимо в постман обэкт юзер та обэкт токен
   } // якщо все добре, в нас є такий юзер і він ввіві вірний пароль, тобто пройшов аутентифікацію,
   // то ми генеруємо нову пару токенів access та refresh
 
