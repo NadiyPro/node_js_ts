@@ -197,7 +197,7 @@ class AuthService {
     }
 
     const passwords = [...oldPasswords, { password: user.password }];
-    //  в passwords записуємо новий масив passwords,
+    //  в passwords записуємо новий масив,
     //  який містить всі старі паролі зі збереженням поточного паролю користувача.
     await Promise.all(
       passwords.map(async (oldPassword) => {
