@@ -11,6 +11,7 @@ import {
 } from "../interfaces/IUser";
 import { User } from "../models/user.model";
 import { actionTokenRepository } from "../repositories/action-token.repository";
+import { oldPasswordRepository } from "../repositories/old-password.repository";
 import { tokenRepository } from "../repositories/token.repository";
 import { userRepository } from "../repositories/user.repository";
 import { emailService } from "./email.service";
@@ -176,26 +177,78 @@ class AuthService {
     jwtPayload: ITokenPayload,
     dto: IChangePassword,
   ): Promise<void> {
-    const user = await userRepository.getById(jwtPayload.userId);
-    // дістаємо з БД інфо по юзеру
+    const [user, oldPasswords] = await Promise.all([
+      userRepository.getById(jwtPayload.userId),
+      // дістаємо з БД інфо по конкретному юзеру user
+      oldPasswordRepository.findByParams(jwtPayload.userId),
+      // дістаємо з БД інфо старі паролі oldPasswords по конкретному юзеру
+    ]);
     const isPasswordCorrect = await passwordService.comparePassword(
       dto.oldPassword,
       user.password,
-    ); // звіряємо пароль який ми витягли з БД user.password,
+    );
+    // звіряємо пароль який ми витягли з БД user.password,
     // з тим паролем, що ввів юзер як старий пароль dto.oldPassword,
-    // якщо вони співпали, то все ок, йдемо далі, якщол ні то кидаємо помилку
+    // якщо вони співпали, то все ок, йдемо далі, якщо ні то кидаємо помилку
     if (!isPasswordCorrect) {
       throw new ApiError("Invalid previous password", 401);
     }
+
+    const passwords = [...oldPasswords, { password: user.password }];
+    //  Результатом буде новий масив passwords,
+    //  який містить всі старі паролі зі збереженням поточного паролю користувача.
+    await Promise.all(
+      passwords.map(async (oldPassword) => {
+        const isPrevious = await passwordService.comparePassword(
+          dto.password,
+          oldPassword.password,
+        );
+        if (isPrevious) {
+          throw new ApiError("Password already used", 409);
+        }
+      }),
+    );
+    // Promise.all(), яка перевіряє кожен пароль з масиву чи він не дорівнює новому паролю,
+    // який ввів користувач. Якщо знайдеться хоча б один пароль,
+    // який дорівнює новому, то викидається виключення з помилкою "Password already used"
+
     const password = await passwordService.hashPassword(dto.password);
     // хешуємо пароль, який ввів юзер як новий
     await userRepository.updateById(jwtPayload.userId, { password });
     // оновлюємо в БД старий пароль, який там був на новий
+    await oldPasswordRepository.create({
+      _userId: jwtPayload.userId,
+      password: user.password,
+    });
     await tokenRepository.deleteManyByParams({ _userId: jwtPayload.userId });
     // видаляємо всі токени видані даному юзеру,
     // таким чином коли буде змінено пароль,
-    // всі сессії будуть розірвані бо ми повидаляємо всі токени
+    // всі сессії будуть розірвані, бо ми повидаляємо всі токени
   }
+  // public async changePassword(
+  //   jwtPayload: ITokenPayload,
+  //   dto: IChangePassword,
+  // ): Promise<void> {
+  //   const user = await userRepository.getById(jwtPayload.userId);
+  //   // дістаємо з БД інфо по юзеру
+  //   const isPasswordCorrect = await passwordService.comparePassword(
+  //     dto.oldPassword,
+  //     user.password,
+  //   ); // звіряємо пароль який ми витягли з БД user.password,
+  //   // з тим паролем, що ввів юзер як старий пароль dto.oldPassword,
+  //   // якщо вони співпали, то все ок, йдемо далі, якщол ні то кидаємо помилку
+  //   if (!isPasswordCorrect) {
+  //     throw new ApiError("Invalid previous password", 401);
+  //   }
+  //   const password = await passwordService.hashPassword(dto.password);
+  //   // хешуємо пароль, який ввів юзер як новий
+  //   await userRepository.updateById(jwtPayload.userId, { password });
+  //   // оновлюємо в БД старий пароль, який там був на новий
+  //   await tokenRepository.deleteManyByParams({ _userId: jwtPayload.userId });
+  //   // видаляємо всі токени видані даному юзеру,
+  //   // таким чином коли буде змінено пароль,
+  //   // всі сессії будуть розірвані бо ми повидаляємо всі токени
+  // }
   // private async isEmailExistOrThrow(email: string): Promise<void> {
   //   const user = await userRepository.getByEmail(email);
   //   if (user) {
