@@ -43,6 +43,13 @@ router.put(
   authControllers.forgotPasswordSet,
 ); // забираємо новий пароль що ввів юзер таоновлюємо інфо про пароль в БД
 router.post(
+  "/change-password",
+  authMiddleware.checkAccessToken,
+  userMiddleware.validateUser(UserValidator.changePassword),
+  authControllers.changePassword,
+); // зміна паролю (знаємо старий пароль, але хочемо його змінити на новий)
+
+router.post(
   "/verify",
   authMiddleware.checkActionToken(ActionTokenTypeEnum.VERIFY_EMAIL),
   authControllers.verify,

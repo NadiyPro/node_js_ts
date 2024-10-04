@@ -3,6 +3,7 @@ import { EmailTypeEnum } from "../enums/email.enum";
 import { ApiError } from "../errors/api.error";
 import { ITokenPair, ITokenPayload } from "../interfaces/IToken";
 import {
+  IChangePassword,
   IResetPasswordSend,
   IResetPasswordSet,
   ISignIn,
@@ -170,6 +171,30 @@ class AuthService {
       _userId: jwtPayload.userId,
       type: ActionTokenTypeEnum.VERIFY_EMAIL,
     });
+  }
+  public async changePassword(
+    jwtPayload: ITokenPayload,
+    dto: IChangePassword,
+  ): Promise<void> {
+    const user = await userRepository.getById(jwtPayload.userId);
+    // дістаємо з БД інфо по юзеру
+    const isPasswordCorrect = await passwordService.comparePassword(
+      dto.oldPassword,
+      user.password,
+    ); // звіряємо пароль який ми витягли з БД user.password,
+    // з тим паролем, що ввів юзер як старий пароль dto.oldPassword,
+    // якщо вони співпали, то все ок, йдемо далі, якщол ні то кидаємо помилку
+    if (!isPasswordCorrect) {
+      throw new ApiError("Invalid previous password", 401);
+    }
+    const password = await passwordService.hashPassword(dto.password);
+    // хешуємо пароль, який ввів юзер як новий
+    await userRepository.updateById(jwtPayload.userId, { password });
+    // оновлюємо в БД старий пароль, який там був на новий
+    await tokenRepository.deleteManyByParams({ _userId: jwtPayload.userId });
+    // видаляємо всі токени видані даному юзеру,
+    // таким чином коли буде змінено пароль,
+    // всі сессії будуть розірвані бо ми повидаляємо всі токени
   }
   // private async isEmailExistOrThrow(email: string): Promise<void> {
   //   const user = await userRepository.getByEmail(email);
