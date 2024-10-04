@@ -24,7 +24,8 @@ class UserMiddleware {
     next: NextFunction,
   ): Promise<void> {
     const user = await userRepository.getById(req.params.userId);
-    //перевіряємо через пошук (метод findById в userRepository.getById) чи є в нас в БД користувач з вказаним userId
+    // перевіряємо через пошук (метод findById в userRepository.getById)
+    // чи є в нас в БД користувач з вказаним userId
 
     if (!user) {
       throw new ApiError("User not found", 400);

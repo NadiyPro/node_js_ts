@@ -26,3 +26,5 @@ export type IResetPasswordSend = Pick<IUser, "email">;
 export type IResetPasswordSet = Pick<IUser, "password"> & { token: string };
 
 export type IChangePassword = Pick<IUser, "password"> & { oldPassword: string };
+// завдяки Pick<T, K> ми кажемо, що з IUser забираємо тільки тип для "password"
+// і додаємо ще новий тип, а саме oldPassword: string
