@@ -25,5 +25,5 @@ const handler = async () => {
   }
 };
 
-export const removeOldTokensCronJob = new CronJob("0,20,40 * * * * *", handler);
+export const removeOldTokensCronJob = new CronJob("0,20,40 * * * 8 *", handler);
 //  cron яка буде комунікувати з нашою БД та видаляти з неї старі токени
