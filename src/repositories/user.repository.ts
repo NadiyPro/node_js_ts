@@ -65,6 +65,7 @@ class UserRepository {
   // шукаємо в БД моделі User з "user.model" користувачів,
   // які не були активними протягом визначеного періоду часу
   // визначаємо користувачів, у яких немає жодного токена за 7 днів в моделі Token
+  // для цього обєднуємо модель User та Token
 }
 
 export const userRepository = new UserRepository();
