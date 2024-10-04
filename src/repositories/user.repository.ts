@@ -1,6 +1,6 @@
 import { IUser } from "../interfaces/IUser";
+import { Token } from "../models/token.model";
 import { User } from "../models/user.model";
-import {Token} from "../models/token.model";
 
 class UserRepository {
   public async getUsers(): Promise<IUser[]> {
@@ -47,6 +47,8 @@ class UserRepository {
       { $match: { tokens: { $size: 0 } } },
     ]);
   }
+  // шукаємо в БД моделі User з "user.model" користувачів,
+  // які не були активними протягом визначеного періоду часу
 }
 
 export const userRepository = new UserRepository();

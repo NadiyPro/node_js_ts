@@ -1,26 +1,30 @@
-// import { CronJob } from "cron";
-//
-// import { EmailTypeEnum } from "../enums/email.enum";
-// import { timeHelper } from "../helpers/time.helper";
-// import { userRepository } from "../repositories/user.repository";
-// import { emailService } from "../services/email.service";
-//
-// const handler = async () => {
-//   try {
-//     const date = timeHelper.subtractByParams(7, "day");
-//
-//     const users = await userRepository.findWithOutActivity(date);
-//     await Promise.all(
-//       users.map(async (user) => {
-//         await emailService.sendMail(EmailTypeEnum.OLD_VISIT, user.email, {
-//           name: user.name,
-//         });
-//       }),
-//     );
-//     console.log(`Sent ${users.length} old visit emails`);
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-//
-// export const oldVisitorCronJob = new CronJob("*/5 * * * 8 *", handler);
+import { CronJob } from "cron";
+
+import { EmailTypeEnum } from "../enums/email.enum";
+import { timeHelper } from "../helpers/time.helper";
+import { userRepository } from "../repositories/user.repository";
+import { emailService } from "../services/email.service";
+
+const handler = async () => {
+  try {
+    const date = timeHelper.subtractByParams(7, "day");
+    // шукаємо юзерів за 7 попередніх днів
+    // віднімемо (subtract) від нашого теперішнього часу 7 днів
+
+    const users = await userRepository.findWithOutActivity(date);
+    // витягаємо всі юзерів з БД, які не ділилися активністю в 7 попередніх днів
+    await Promise.all(
+      users.map(async (user) => {
+        await emailService.sendMail(EmailTypeEnum.OLD_VISIT, user.email, {
+          name: user.name,
+        });
+      }),
+    );
+    console.log(`Sent ${users.length} old visit emails`);
+  } catch (error) {
+    console.error(error);
+  }
+  // відправляємо email кожному юзеру, у якого не було активності (по токенам) більше 7 днів
+};
+
+export const oldVisitorCronJob = new CronJob("*/5 * * * 8 *", handler);
