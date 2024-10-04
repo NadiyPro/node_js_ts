@@ -3,13 +3,17 @@ import { Token } from "../models/token.model";
 
 class TokenRepository {
   public async create(dto: Partial<IToken>): Promise<IToken> {
-    return await Token.create(dto); // робимо звязку між моделью зі схемою та тим що нам надходить в інтелідж
+    return await Token.create(dto);
+    // робимо звязку між моделью зі схемою та тим що нам надходить в інтелідж
+    // де Token - це модель "token.model.ts" в якій ми створюмо інфо
   }
 
   public async findByParams(params: Partial<IToken>): Promise<IToken | null> {
     return await Token.findOne(params);
   } // шукаємо / дістаємо один запис у колекції Token в БД відповідно до переданих параметрів,
-  // тобто шукаємо по значанню, що містяться в access / refresh токенах юзера і дістаєму інфо по ньому з БД
+  // тобто шукаємо по значанню, що містяться в access / refresh токенах юзера
+  // і дістаєму інфо по ньому з БД
+  // де Token - це модель "token.model.ts" в якій ми шукаємо конкретну інфо
 
   public async deleteOneByParams(params: Partial<IToken>): Promise<void> {
     await Token.deleteOne(params);

@@ -9,7 +9,9 @@ class OldPasswordRepository {
   }
 
   public async findByParams(userId: string): Promise<IOldPassword[]> {
-    return await OldPassword.find({ _userId: userId }); // шукаємо всі записи які належать юзеру
+    return await OldPassword.find({ _userId: userId });
+    // шукаємо всі записи які належать юзеру згідно моделі
+    // де OldPassword - це модель "old-password.model.ts" в якій ми шукаємо конкретну інфо
   }
 
   public async deleteManyByParams(
