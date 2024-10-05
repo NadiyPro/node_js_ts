@@ -28,8 +28,8 @@ app.use("*", (error: any, req: Request, res: Response, next: NextFunction) => {
 app.listen(config.APP_PORT, async () => {
   cronRunner();
   // запускаємо файл index.ts з cron
-  // (cron - це тула, яка дає нам змогу запустити якийсь функціонал / метод,
-  // через якийсь певний період часу)
+  // cron - це тула, яка дає нам змогу запустити якийсь функціонал / метод,
+  // через якийсь певний період часу
   await mongoose.connect(config.MONGO_URI);
   console.log(
     `Server is running on https://${config.APP_HOST}:${config.APP_PORT}`,
