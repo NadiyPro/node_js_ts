@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
+import fileupload from "express-fileupload";
 import * as mongoose from "mongoose";
 
 import { config } from "./config/configs";
@@ -11,6 +12,10 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(fileupload());
+// перевіряє на наявність файлів, якщо файли є,
+// то в нашому req зявляється спеціальне поле files
+// і потім по ключу ми зможемо втягувати ці файли
 
 app.use("/auth", authRouter);
 app.use("/users1", userRouter);

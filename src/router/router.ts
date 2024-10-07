@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import { userController } from "../controllers/user.controllers";
 import { authMiddleware } from "../middleware/auth.middleware";
+import { fileMiddleware } from "../middleware/file.middleware";
 import { userMiddleware } from "../middleware/user.middleware";
 import { UserValidator } from "../validators/user.validator";
 
@@ -17,6 +18,12 @@ router.put(
   userController.updateMe,
 );
 router.delete("/me", authMiddleware.checkAccessToken, userController.deleteMe);
+router.post(
+  "/me/avatar",
+  authMiddleware.checkAccessToken, // перевіряємо права доступу (access токен на валідність)
+  fileMiddleware.isFileValid(), // перевіряємо файл який ми хочемо звантажити на aws
+  userController.uploadAvatar, // завантажуємо файл
+);
 router.get("/:userId", userMiddleware.isUserExist, userController.getUserId);
 
 export const userRouter = router;

@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from "express";
+import { UploadedFile } from "express-fileupload";
 
 import { ITokenPayload } from "../interfaces/IToken";
 import { IUser } from "../interfaces/IUser";
+import { userPresenter } from "../presenters/user.presenter";
 import { userService } from "../services/user.service";
 
 class UserController {
@@ -63,6 +65,27 @@ class UserController {
       // const userId = req.params.userId;
       // await userService.deleteUser(userId);
       res.sendStatus(204);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async uploadAvatar(req: Request, res: Response, next: NextFunction) {
+    try {
+      const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
+      // дістаємо з локалс інфо по юзеру (айді юзера та роль)
+
+      const avatar = req.files.avatar as UploadedFile;
+      // UploadedFile - це вбудований в бібліотеку "express-fileupload") тип для файлів,
+      // який містить в собі name, mimetype, data та інше
+      // дістаємо із запиту файл завантажений під ключем avatar
+
+      const user = await userService.uploadAvatar(jwtPayload, avatar);
+      const result = userPresenter.toPublicResDto(user);
+      // toPublicResDto - цей метод приймає як аргумент об'єкт entity, який є користувачем (user).
+      // Він повертає новий об'єкт, лише ті поля,
+      // які повинні бути доступними для публічного використання.
+      res.status(201).json(result);
     } catch (e) {
       next(e);
     }
