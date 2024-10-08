@@ -23,9 +23,9 @@ router.post(
   "/me/avatar",
   authMiddleware.checkAccessToken, // перевіряємо права доступу (access токен на валідність)
   fileMiddleware.isFileValid("avatar", avatarConfig),
-  // прокидаємо ключ по контрому будемо діставати файл (avatar) з нашого обєкту,
+  // прокидаємо ключ по котрому будемо діставати файл (avatar) з нашого обєкту,
   // другим аргументом будемо прокидати набір валідаційних даних (розмір (mimetype) та розширення (size)),
-  // яку пропишемо в папці constans
+  // яку пропишемо в папці constants
   // (перевіряємо файл який ми хочемо звантажити на aws
   userController.uploadAvatar, // завантажуємо файл
 );
