@@ -51,7 +51,7 @@ class UserService {
     const updatedUser = await userRepository.updateById(user._id, { avatar });
     // оновлюємо аватар юзера (або створюємо якщо у нього не було аватару)
     if (user.avatar) {
-      // await s3Service.deleteFile(user.avatar); TODO
+      await s3Service.deleteFile(user.avatar);
     } // *якщо юзер мав аватар, видаляємо його з S3 (це потім реалізуємо
     return updatedUser;
   }
