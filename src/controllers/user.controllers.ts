@@ -96,6 +96,7 @@ class UserController {
       const jwtPayload = req.res.locals.jwtPayload as ITokenPayload;
 
       const user = await userService.deleteAvatar(jwtPayload);
+      //  видаляємо аватар юзера
       const result = userPresenter.toPublicResDto(user);
       res.status(201).json(result);
     } catch (e) {

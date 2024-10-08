@@ -27,7 +27,7 @@ router.post(
 router.delete(
   "/me/avatar",
   authMiddleware.checkAccessToken,
-  userController.deleteAvatar,
+  userController.deleteAvatar, // видаляємо аватар юзера
 );
 router.get("/:userId", userMiddleware.isUserExist, userController.getUserId);
 

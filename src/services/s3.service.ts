@@ -59,14 +59,19 @@ class S3Service {
       await this.client.send(
         new DeleteObjectCommand({
           Bucket: config.AWS_S3_BUCKET_NAME,
-          Key: filePath,
+          Key: filePath, // шлях де знаходиться файл, який ми видаляємо
         }),
       );
     } catch (error) {
       console.error("Error delete: ", error.message);
     }
   }
-  // DeleteObjectCommand(
+  // new DeleteObjectCommand — це клас або команда, я
+  // ка використовується для видалення об'єкта (файлу) з Amazon S3,
+  // якщо ти використовуєш AWS SDK для JavaScript/TypeScript.
+  // Вона є частиною пакету @aws-sdk/client-s3
+  // приймаємо шлях де лежить наш файл (аватар) filePath,
+  // і потім даний обєкт повністю, в т.ч всі паки що прописані в нашому шляху
 
   private buildPath(
     itemType: FileItemTypeEnum,

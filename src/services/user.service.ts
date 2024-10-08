@@ -52,16 +52,17 @@ class UserService {
     // оновлюємо аватар юзера (або створюємо якщо у нього не було аватару)
     if (user.avatar) {
       await s3Service.deleteFile(user.avatar);
-    } // *якщо юзер мав аватар, видаляємо його з S3 (це потім реалізуємо
-    return updatedUser;
+    } // якщо юзер мав аватар, видаляємо його з S3
+    return updatedUser; // повертаємо юзера з новим аватаром
   }
 
   public async deleteAvatar(jwtPayload: ITokenPayload): Promise<IUser> {
     const user = await userRepository.getById(jwtPayload.userId);
-
+    // знаходимо юзера в БД по айді яке забрали з мідлварки з локалсів
     if (user.avatar) {
       await s3Service.deleteFile(user.avatar);
     }
+    // якщо у юзера є аватар, то видаляємо його
     return await userRepository.updateById(user._id, { avatar: null });
   }
 }
