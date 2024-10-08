@@ -66,12 +66,12 @@ class S3Service {
       console.error("Error delete: ", error.message);
     }
   }
-  // new DeleteObjectCommand — це клас або команда, я
-  // ка використовується для видалення об'єкта (файлу) з Amazon S3,
+  // new DeleteObjectCommand — це клас або команда,
+  // яка використовується для видалення об'єкта (файлу) з Amazon S3,
   // якщо ти використовуєш AWS SDK для JavaScript/TypeScript.
   // Вона є частиною пакету @aws-sdk/client-s3
   // приймаємо шлях де лежить наш файл (аватар) filePath,
-  // і потім даний обєкт повністю, в т.ч всі паки що прописані в нашому шляху
+  // і потім даний обєкт повністю, включаючи папку з айді юзера
 
   private buildPath(
     itemType: FileItemTypeEnum,
