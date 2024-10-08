@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { avatarConfig } from "../constants/image.constants";
 import { userController } from "../controllers/user.controllers";
 import { authMiddleware } from "../middleware/auth.middleware";
 import { fileMiddleware } from "../middleware/file.middleware";
@@ -21,7 +22,11 @@ router.delete("/me", authMiddleware.checkAccessToken, userController.deleteMe);
 router.post(
   "/me/avatar",
   authMiddleware.checkAccessToken, // перевіряємо права доступу (access токен на валідність)
-  fileMiddleware.isFileValid(), // перевіряємо файл який ми хочемо звантажити на aws
+  fileMiddleware.isFileValid("avatar", avatarConfig),
+  // прокидаємо ключ по контрому будемо діставати файл (avatar) з нашого обєкту,
+  // другим аргументом будемо прокидати набір валідаційних даних (розмір (mimetype) та розширення (size)),
+  // яку пропишемо в папці constans
+  // (перевіряємо файл який ми хочемо звантажити на aws
   userController.uploadAvatar, // завантажуємо файл
 );
 router.delete(
