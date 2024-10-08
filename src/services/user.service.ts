@@ -55,6 +55,15 @@ class UserService {
     } // *якщо юзер мав аватар, видаляємо його з S3 (це потім реалізуємо
     return updatedUser;
   }
+
+  public async deleteAvatar(jwtPayload: ITokenPayload): Promise<IUser> {
+    const user = await userRepository.getById(jwtPayload.userId);
+
+    if (user.avatar) {
+      await s3Service.deleteFile(user.avatar);
+    }
+    return await userRepository.updateById(user._id, { avatar: null });
+  }
 }
 
 export const userService = new UserService();

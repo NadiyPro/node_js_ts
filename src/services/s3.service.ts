@@ -1,6 +1,10 @@
 import { randomUUID } from "node:crypto";
 
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { UploadedFile } from "express-fileupload";
 import path from "path";
 
@@ -45,7 +49,24 @@ class S3Service {
     } catch (error) {
       console.error("Error upload: ", error);
     }
-  } // завантажуємо файл на aws
+  }
+  // завантажуємо файл на aws
+  // імпортуємо PutObjectCommand з "@aws-sdk/client-s3"
+  // PutObjectCommand - це Команда AWS SDK, яка дозволяє завантажити файл до вказаного S3 бакету
+
+  public async deleteFile(filePath: string): Promise<void> {
+    try {
+      await this.client.send(
+        new DeleteObjectCommand({
+          Bucket: config.AWS_S3_BUCKET_NAME,
+          Key: filePath,
+        }),
+      );
+    } catch (error) {
+      console.error("Error delete: ", error.message);
+    }
+  }
+  // DeleteObjectCommand(
 
   private buildPath(
     itemType: FileItemTypeEnum,

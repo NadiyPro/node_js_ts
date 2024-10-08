@@ -24,6 +24,11 @@ router.post(
   fileMiddleware.isFileValid(), // перевіряємо файл який ми хочемо звантажити на aws
   userController.uploadAvatar, // завантажуємо файл
 );
+router.delete(
+  "/me/avatar",
+  authMiddleware.checkAccessToken,
+  userController.deleteAvatar,
+);
 router.get("/:userId", userMiddleware.isUserExist, userController.getUserId);
 
 export const userRouter = router;
