@@ -64,6 +64,7 @@ class UserService {
     }
     // якщо у юзера є аватар, то видаляємо його
     return await userRepository.updateById(user._id, { avatar: null });
+    // повертаємо юзера з відсутнім аватаром
   }
 }
 
