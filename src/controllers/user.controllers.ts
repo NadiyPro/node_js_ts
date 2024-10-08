@@ -98,6 +98,9 @@ class UserController {
       const user = await userService.deleteAvatar(jwtPayload);
       //  видаляємо аватар юзера
       const result = userPresenter.toPublicResDto(user);
+      // toPublicResDto - цей метод приймає як аргумент об'єкт entity, який є користувачем (user).
+      // Він повертає новий об'єкт, лише ті поля,
+      // які повинні бути доступними для публічного використання.
       res.status(201).json(result);
     } catch (e) {
       next(e);
