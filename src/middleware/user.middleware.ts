@@ -11,6 +11,7 @@ class UserMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
         req.body = await validator.validateAsync(req.body);
+        // перевіряємо body з запиту на відповідність схемі прописаної в models
         next();
       } catch (e) {
         next(new ApiError(e.details[0].message, 400));
@@ -33,6 +34,18 @@ class UserMiddleware {
 
     (req as any).user = user; // Зберігаємо знайденого користувача
     next();
+  }
+
+  public isQueryValid(validator: ObjectSchema) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        req.query = await validator.validateAsync(req.query);
+        // перевіряємо query (адресна строка) із запиту на відповідність схемі прописаної в models
+        next();
+      } catch (e) {
+        next(new ApiError(e.details[0].message, 400));
+      }
+    };
   }
 }
 
