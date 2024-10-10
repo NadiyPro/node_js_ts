@@ -22,6 +22,10 @@ class UserRepository {
       User.find(filterObj).limit(query.limit).skip(skip),
       User.countDocuments(filterObj),
     ]);
+    // формуємо вибірку на базі аргументів які ми прокидаємо ззовні
+    // повертати будемо (IUser[]) масив юзерів User.find() (entities - масив елементів у нас це юзерів)
+    // повертаємо кількість (number) знайдених юзерів User.countDocuments()
+    // (total - кількість елементів, у нас це кількість юзерів)
   }
 
   public async create(dto: Partial<IUser>): Promise<IUser> {

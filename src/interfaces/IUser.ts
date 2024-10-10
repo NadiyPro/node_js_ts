@@ -35,10 +35,10 @@ export type IChangePassword = Pick<IUser, "password"> & { oldPassword: string };
 export interface IUserListQuery {
   limit?: number;
   page?: number;
-  search?: string;
-  order?: OrderEnum;
-  orderBy?: UserListOrderByEnum;
-}
+  search?: string; // пошуковий об'єкт
+  order?: OrderEnum; // поля для сортування name / age
+  orderBy?: UserListOrderByEnum; // сортування ask / desk
+} // описуємо все що може приймати наша query (адресна строка)
 
 export type IUserResponse = Pick<
   IUser,

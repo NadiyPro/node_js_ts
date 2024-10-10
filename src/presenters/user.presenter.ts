@@ -33,8 +33,11 @@ class UserPresenter {
   ): IUserListResponse {
     return {
       data: entities.map(this.toPublicResDto),
+      //повертаємо промапаних юзерів які відповідають потрібним нам умовам
       total,
+      // повртаємо кількість юзерів які підходять під наші умови
       ...query,
+      // повертаємо оновлену кверю
     };
   }
 }
