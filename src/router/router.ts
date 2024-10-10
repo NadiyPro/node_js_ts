@@ -11,6 +11,8 @@ const router = Router();
 router.get(
   "/",
   userMiddleware.isQueryValid(UserValidator.listQuery),
+  // перевіряємо query (адресна строка) із запиту
+  // на відповідність схемі прописаної в models
   userController.getUsers,
 );
 

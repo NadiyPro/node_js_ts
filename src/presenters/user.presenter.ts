@@ -1,5 +1,5 @@
 import { config } from "../config/configs";
-import { IUser } from "../interfaces/IUser";
+import { IUser, IUserListQuery, IUserListResponse } from "../interfaces/IUser";
 
 class UserPresenter {
   toPublicResDto(entity: IUser) {
@@ -25,6 +25,18 @@ class UserPresenter {
   // який є користувачем (user).
   // Він повертає новий об'єкт, лише ті поля,
   // які повинні бути доступними для публічного використання.
+
+  public toListResDto(
+    entities: IUser[],
+    total: number,
+    query: IUserListQuery,
+  ): IUserListResponse {
+    return {
+      data: entities.map(this.toPublicResDto),
+      total,
+      ...query,
+    };
+  }
 }
 
 export const userPresenter = new UserPresenter();

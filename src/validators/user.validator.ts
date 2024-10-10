@@ -1,8 +1,8 @@
 import joi from "joi";
 
 import { regexConstant } from "../constants/regex.constant";
-import {OrderEnum} from "../enums/order.enum";
-import {UserListOrderByEnum} from "../enums/user-list-order-by.enum";
+import { OrderEnum } from "../enums/order.enum";
+import { UserListOrderByEnum } from "../enums/user-list-order-by.enum";
 
 export class UserValidator {
   private static name = joi.string().min(3).max(20).trim();
@@ -42,9 +42,11 @@ export class UserValidator {
   });
 
   public static listQuery = joi.object({
-    limit: joi.number().min(1).max(100).default(10), // ліміт від 1 до 100, по дефолту 10
+    limit: joi.number().min(1).max(100).default(10),
+    // ліміт від 1 до 100, по дефолту 10
     page: joi.number().min(1).default(1),
-    search: joi.string().trim().lowercase(), // стрінга без пробілів, всі маленькі літери
+    search: joi.string().trim().lowercase(),
+    // стрінга без пробілів, всі маленькі літери
     order: joi.string().valid(...Object.values(OrderEnum)),
     // стрінга сортування по ASC (від а-я) або DESC (від я-а)
     orderBy: joi.string().valid(...Object.values(UserListOrderByEnum)),

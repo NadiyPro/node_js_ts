@@ -40,7 +40,8 @@ class UserMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
         req.query = await validator.validateAsync(req.query);
-        // перевіряємо query (адресна строка) із запиту на відповідність схемі прописаної в models
+        // перевіряємо query (адресна строка) із запиту
+        // на відповідність схемі прописаної в models
         next();
       } catch (e) {
         next(new ApiError(e.details[0].message, 400));

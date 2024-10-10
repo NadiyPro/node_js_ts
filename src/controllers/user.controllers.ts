@@ -2,15 +2,16 @@ import { NextFunction, Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
 
 import { ITokenPayload } from "../interfaces/IToken";
-import { IUser } from "../interfaces/IUser";
+import { IUser, IUserListQuery } from "../interfaces/IUser";
 import { userPresenter } from "../presenters/user.presenter";
 import { userService } from "../services/user.service";
 
 class UserController {
   public async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      const users = await userService.getUsers();
-      res.status(201).json(users);
+      const query = req.query as unknown as IUserListQuery;
+      const result = await userService.getUsers(query);
+      res.json(result);
     } catch (e) {
       next(e); // передаємо помилки на обробку на верхній рівень, тобто в index.ts
     }
