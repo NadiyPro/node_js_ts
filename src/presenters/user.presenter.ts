@@ -1,8 +1,8 @@
 import { config } from "../config/configs";
-import { IUser, IUserListQuery, IUserListResponse } from "../interfaces/IUser";
+import {IUser, IUserListQuery, IUserListResponse, IUserResponse} from "../interfaces/IUser";
 
 class UserPresenter {
-  toPublicResDto(entity: IUser) {
+  public toPublicResDto(entity: IUser): IUserResponse {
     return {
       _id: entity._id,
       name: entity.name,
