@@ -33,8 +33,8 @@ export type IChangePassword = Pick<IUser, "password"> & { oldPassword: string };
 // і додаємо ще новий тип, а саме oldPassword: string
 
 export interface IUserListQuery {
-  limit?: number;
-  page?: number;
+  limit?: number; // це ліміт значень які ми хочемо відображати на сторінці
+  page?: number; // номер сторінки
   search?: string; // пошуковий об'єкт
   order?: OrderEnum; // поля для сортування name / age
   orderBy?: UserListOrderByEnum; // сортування ask / desk
@@ -55,7 +55,6 @@ export type IUserResponse = Pick<
 // що ми беремо тільки ті властивості з інтерфейсу IUser, що ми перерахували.
 
 export interface IUserListResponse {
-  data: IUserResponse[];
-  total: number;
-} // типізація для відповіді фронт енду по масиву юзерів,
-// які задавольняють умовам запиту
+  data: IUserResponse[]; // масив юзерів,які задавольняють умовам запиту
+  total: number; // кількість юзерів які підходять під наші умови
+} // типізація для відповіді фронт енду

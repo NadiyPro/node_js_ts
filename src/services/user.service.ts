@@ -11,9 +11,12 @@ import { s3Service } from "./s3.service";
 class UserService {
   public async getUsers(query: IUserListQuery): Promise<IUserListResponse> {
     const [entities, total] = await userRepository.getUsers(query);
-    // entities - масив елементів у нас це юзерів
-    // total - кількість елементів, у нас це кількість юзерів
+    //
     return userPresenter.toListResDto(entities, total, query);
+    //
+    // entities - масив елементів у нас це юзерів, які відповідать умовам запиту фронт енда
+    // total - кількість елементів, у нас це кількість юзерів, які відповідать умовам запиту
+    //  повертаємо оновлену кверю (запит прописаний фронтом в адресній стрічці)
   }
 
   public async getById(userId: string): Promise<IUser> {

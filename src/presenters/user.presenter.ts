@@ -1,5 +1,10 @@
 import { config } from "../config/configs";
-import {IUser, IUserListQuery, IUserListResponse, IUserResponse} from "../interfaces/IUser";
+import {
+  IUser,
+  IUserListQuery,
+  IUserListResponse,
+  IUserResponse,
+} from "../interfaces/IUser";
 
 class UserPresenter {
   public toPublicResDto(entity: IUser): IUserResponse {
@@ -33,12 +38,17 @@ class UserPresenter {
   ): IUserListResponse {
     return {
       data: entities.map(this.toPublicResDto),
-      //повертаємо промапаних юзерів які відповідають потрібним нам умовам
+      // масив юзерів які підходять під умови запиту ми промапуємо через метод toPublicResDto
+      // щоб повернути у відповідь лише ті поля,
+      // які повинні бути доступними для публічного використання.
       total,
       // повртаємо кількість юзерів які підходять під наші умови
       ...query,
-      // повертаємо оновлену кверю
+      // повертаємо оновлену кверю (запит від фронта в адресній стрічці)
     };
+    //  toListResDto - цей метод приймає, підходящий під умови масив юзерів,
+    //  їх кількість та кверю, а повертає новий об'єкт, лише ті поля,
+    //  які повинні бути доступними для публічного використання.
   }
 }
 
