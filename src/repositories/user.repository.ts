@@ -26,9 +26,6 @@ class UserRepository {
       //   { email: { $regex: query.search, $options: "i" } },
       // ];
     }
-
-    // TODO - Add sorting
-
     const skip = query.limit * (query.page - 1);
     // limit - це ліміт значень які ми хочемо відображати на сторінці, page - 1 - це кількість сторінок
     // ми кажемо, що: хочемо пропускати вказану кількість значень (limit) з попередньої сторінки +page - 1,
@@ -38,15 +35,10 @@ class UserRepository {
     // якщо ж ми хочемо відобразити першу сторінку, тобто в нас page = 1, limit = 5, отже skip = 5 * (1-1),
     // таким чином в нас буде skip =0, а отже ми просто відобразимо на першій сторінці елементи з 1 по 5
     return await Promise.all([
-      User.find(filterObj).limit(query.limit).skip(skip),
-      // повертаємо з БД зазначену кількість елементів виконуючи skip
-      User.countDocuments(filterObj),
-      // повертаємо кількість знайдених елементів
+      User.find(filterObj).limit(query.limit).skip(skip), // повертаємо з БД зазначену кількість елементів виконуючи skip
+      User.countDocuments(filterObj), // повертаємо кількість знайдених елементів
     ]);
-    // формуємо вибірку на базі аргументів які ми прокидаємо ззовні
-    // повертати будемо (IUser[]) масив юзерів User.find() (entities - масив елементів у нас це юзерів)
-    // повертаємо кількість (number) знайдених юзерів User.countDocuments()
-    // (total - кількість елементів, у нас це кількість юзерів)
+    // формуємо вибірку на базі аргументів які ми прокидаємо ззовні (параметри на які фронт давав запит в адресній стрічці)
   }
 
   public async create(dto: Partial<IUser>): Promise<IUser> {

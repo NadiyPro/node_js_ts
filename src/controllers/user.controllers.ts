@@ -10,7 +10,7 @@ class UserController {
   public async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const query = req.query as unknown as IUserListQuery;
-      // параметри на які фронт давав запит в адресній стрічці: limit, page, search(пошуковий об'єкт), order, orderBy
+      // параметри на які фронт давав запит в адресній стрічці: limit/page/search(пошуковий об'єкт)/order/orderBy
       const result = await userService.getUsers(query);
       res.json(result);
     } catch (e) {
