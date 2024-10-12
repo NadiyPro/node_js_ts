@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { rateLimit } from "express-rate-limit";
 
 import { avatarConfig } from "../constants/image.constants";
 import { userController } from "../controllers/user.controllers";
@@ -8,6 +9,8 @@ import { userMiddleware } from "../middleware/user.middleware";
 import { UserValidator } from "../validators/user.validator";
 
 const router = Router();
+// router.use(rateLimit({ windowMs: 2 * 60 * 1000, limit: 5 }));
+
 router.get(
   "/",
   userMiddleware.isQueryValid(UserValidator.listQuery),
@@ -16,7 +19,14 @@ router.get(
   userController.getUsers,
 );
 
-router.get("/me", authMiddleware.checkAccessToken, userController.getMe);
+router.get(
+  "/me",
+  rateLimit({ windowMs: 5 * 60 * 1000, limit: 5 }),
+  // вкажемо що для одного IP адреса можна здійснити
+  // максимум 5 запитів за 2 хвилини
+  authMiddleware.checkAccessToken,
+  userController.getMe,
+);
 router.put(
   "/me",
   authMiddleware.checkAccessToken,
