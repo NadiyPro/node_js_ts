@@ -46,7 +46,7 @@ class UserRepository {
       case UserListOrderByEnum.AGE:
         sortObj.age = query.order;
         break;
-      case UserListOrderByEnum.CREATED:
+      case UserListOrderByEnum.CREATED: // по даті створення юзера
         sortObj.createdAt = query.order;
         break;
       default:
