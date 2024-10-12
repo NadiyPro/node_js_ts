@@ -36,8 +36,8 @@ export interface IUserListQuery {
   limit?: number; // це ліміт значень які ми хочемо відображати на сторінці
   page?: number; // номер сторінки
   search?: string; // пошуковий об'єкт
-  order?: OrderEnum; // поля для сортування name / age
-  orderBy?: UserListOrderByEnum; // сортування ask / desk
+  order?: OrderEnum; // сортування ask / desk
+  orderBy?: UserListOrderByEnum; // поля для сортування name / age / createdAt
 } // описуємо все що може приймати наша query (адресна строка)
 
 export type IUserResponse = Pick<

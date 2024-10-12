@@ -1,5 +1,7 @@
-import { FilterQuery } from "mongoose";
+import { FilterQuery, SortOrder } from "mongoose";
 
+import { UserListOrderByEnum } from "../enums/user-list-order-by.enum";
+import { ApiError } from "../errors/api.error";
 import { IUser, IUserListQuery } from "../interfaces/IUser";
 import { Token } from "../models/token.model";
 import { User } from "../models/user.model";
@@ -26,6 +28,31 @@ class UserRepository {
       //   { email: { $regex: query.search, $options: "i" } },
       // ];
     }
+    const sortObj: { [key: string]: SortOrder } = {};
+    // [key: string] означає, що ключами можуть бути будь-які рядкові значення (назви полів для сортування),
+    // а значеннями будуть значення типу SortOrder (це або "asc" — за зростанням, або "desc" — за спаданням).
+    //SortOrder - це тип, який походить з бібліотеки Mongoose, яка використовується для роботи з MongoDB у Node.js.
+    // У контексті Mongoose, SortOrder визначає порядок сортування в запитах до MongoDB.
+    // Він може приймати значення "asc" або "desc", що означає сортування за зростанням або спаданням відповідн
+    switch (query.orderBy) {
+      case UserListOrderByEnum.NAME:
+        sortObj.name = query.order;
+        break;
+      // query.orderBy по якому полі ми хочемо сортувати
+      // (ми в запиті query доступаємося до поля, яке заначив фронт енд name/age/createdAt)
+      // Якщо query.orderBy дорівнює типу UserListOrderByEnum.NAME (тобто з query дістали "name"),
+      // то в об'єкті sortObj замість [key] буде name зі значенням query.order,
+      // яке визначає напрямок сортування ("asc" або "desc").
+      case UserListOrderByEnum.AGE:
+        sortObj.age = query.order;
+        break;
+      case UserListOrderByEnum.CREATED:
+        sortObj.createdAt = query.order;
+        break;
+      default:
+        throw new ApiError("Invalid orderBy", 500);
+    }
+    //
     const skip = query.limit * (query.page - 1);
     // limit - це ліміт значень які ми хочемо відображати на сторінці, page - 1 - це кількість сторінок
     // ми кажемо, що: хочемо пропускати вказану кількість значень (limit) з попередньої сторінки +page - 1,
@@ -35,7 +62,8 @@ class UserRepository {
     // якщо ж ми хочемо відобразити першу сторінку, тобто в нас page = 1, limit = 5, отже skip = 5 * (1-1),
     // таким чином в нас буде skip =0, а отже ми просто відобразимо на першій сторінці елементи з 1 по 5
     return await Promise.all([
-      User.find(filterObj).limit(query.limit).skip(skip), // повертаємо з БД зазначену кількість елементів виконуючи skip
+      User.find(filterObj).sort(sortObj).limit(query.limit).skip(skip),
+      // повертаємо з БД зазначену кількість елементів виконуючи skip та sort
       User.countDocuments(filterObj), // повертаємо кількість знайдених елементів
     ]);
     // формуємо вибірку на базі аргументів які ми прокидаємо ззовні (параметри на які фронт давав запит в адресній стрічці)
