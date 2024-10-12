@@ -1,6 +1,7 @@
 import { OrderEnum } from "../enums/order.enum";
 import { RoleEnum } from "../enums/role.enum";
 import { UserListOrderByEnum } from "../enums/user-list-order-by.enum";
+import { PickRequired } from "../types/pick-required.type";
 
 export interface IUser {
   _id?: string;
@@ -13,6 +14,8 @@ export interface IUser {
   role: RoleEnum;
   isVerified: boolean;
   isDeleted: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export type ISignIn = Pick<IUser, "email" | "password">;
@@ -42,17 +45,15 @@ export interface IUserListQuery {
 
 export type IUserResponse = Pick<
   IUser,
-  | "_id"
-  | "name"
-  | "email"
-  | "age"
-  | "role"
-  | "avatar"
-  | "isDeleted"
-  | "isVerified"
->; // типізація для відповіді фронт енду по одному юзеру
-// тут ми кажемо, що ми йдемо в T — тип, з якого вибираються властивості (IUser)
-// що ми беремо тільки ті властивості з інтерфейсу IUser, що ми перерахували.
+  "name" | "email" | "age" | "role" | "avatar" | "isDeleted" | "isVerified"
+> &
+  PickRequired<IUser, "_id" | "createdAt">;
+// типізація для відповіді фронт енду по одному юзеру
+// в Pick ми кажемо, що ми йдемо в T — тип, з якого вибираються властивості (IUser)
+// що ми беремо тільки ті властивості з інтерфейсу IUser, що ми перерахували і
+// за допомогою PickRequired з "../types/pick-required.type"
+// робимо властивості  "_id" | "createdAt" обов'язковими
+// навіть якщо вони були необов'язковими в початковому типі.
 
 export interface IUserListResponse {
   data: IUserResponse[]; // масив юзерів,які задавольняють умовам запиту

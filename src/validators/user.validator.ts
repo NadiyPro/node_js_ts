@@ -47,9 +47,18 @@ export class UserValidator {
     page: joi.number().min(1).default(1),
     search: joi.string().trim().lowercase(),
     // стрінга без пробілів, всі маленькі літери
-    order: joi.string().valid(...Object.values(OrderEnum)),
+    order: joi
+      .string()
+      .valid(...Object.values(OrderEnum))
+      .default(OrderEnum.ASC),
     // стрінга сортування по ASC (від а-я) або DESC (від я-а)
-    orderBy: joi.string().valid(...Object.values(UserListOrderByEnum)),
+    // по дефолту ASC (від а-я)
+    orderBy: joi
+      .string()
+      .valid(...Object.values(UserListOrderByEnum))
+      .default(UserListOrderByEnum.CREATED),
     // стрінга, по яким полям ми даємо можливість викновуати сортування
+    // по дефолту сортуємо по даті UserListOrderByEnum.CREATED,
+    // тобто createdAt сортуємо по даті створення юзера
   });
 }

@@ -24,6 +24,7 @@ class UserPresenter {
       // якщо ні, то буде null.
       isDeleted: entity.isDeleted,
       isVerified: entity.isVerified,
+      createdAt: entity.createdAt,
     };
   }
   // toPublicResDto - цей метод приймає як аргумент об'єкт entity,

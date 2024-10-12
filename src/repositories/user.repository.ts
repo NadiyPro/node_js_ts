@@ -52,7 +52,7 @@ class UserRepository {
       default:
         throw new ApiError("Invalid orderBy", 500);
     }
-    //
+    //UserListOrderByEnum.CREATED, тобто createdAt сортуємо по даті створення юзера
     const skip = query.limit * (query.page - 1);
     // limit - це ліміт значень які ми хочемо відображати на сторінці, page - 1 - це кількість сторінок
     // ми кажемо, що: хочемо пропускати вказану кількість значень (limit) з попередньої сторінки +page - 1,
