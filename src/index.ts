@@ -40,6 +40,6 @@ app.listen(config.APP_PORT, async () => {
   // через якийсь певний період часу
   await mongoose.connect(config.MONGO_URI);
   console.log(
-    `Server is running on https://${config.APP_HOST}:${config.APP_PORT}`,
+    `Server is running on http://${config.APP_HOST}:${config.APP_PORT}`,
   );
 });
