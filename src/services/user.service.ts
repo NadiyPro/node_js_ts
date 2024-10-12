@@ -11,7 +11,7 @@ import { s3Service } from "./s3.service";
 class UserService {
   public async getUsers(query: IUserListQuery): Promise<IUserListResponse> {
     const [entities, total] = await userRepository.getUsers(query);
-    //
+    // формуємо вибірку на базі аргументів які ми прокидаємо ззовні (параметри на які фронт давав запит в адресній стрічці)
     return userPresenter.toListResDto(entities, total, query);
     //
     // entities - масив елементів у нас це юзерів, які відповідать умовам запиту фронт енда
