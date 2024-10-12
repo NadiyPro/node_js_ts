@@ -1,7 +1,9 @@
 import express, { NextFunction, Request, Response } from "express";
 import fileupload from "express-fileupload";
 import * as mongoose from "mongoose";
+import swaggerUi from "swagger-ui-express";
 
+import swaggerDocument from "../docs/swagger.json";
 import { config } from "./config/configs";
 import { cronRunner } from "./crons";
 import { ApiError } from "./errors/api.error";
@@ -16,7 +18,8 @@ app.use(fileupload());
 // перевіряє на наявність файлів, якщо файли є,
 // то в нашому req зявляється спеціальне поле files
 // і потім по ключу ми зможемо втягувати ці файли
-
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// підключаємо swagger
 app.use("/auth", authRouter);
 app.use("/users1", userRouter);
 
