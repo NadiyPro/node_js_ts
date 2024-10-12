@@ -10,7 +10,8 @@ import { UserValidator } from "../validators/user.validator";
 
 const router = Router();
 // router.use(rateLimit({ windowMs: 2 * 60 * 1000, limit: 5 }));
-
+// застосуємо загальний для всіх ендпоінтів (шляхів), що тут знаходяться
+// тобто в userRouter
 router.get(
   "/",
   userMiddleware.isQueryValid(UserValidator.listQuery),

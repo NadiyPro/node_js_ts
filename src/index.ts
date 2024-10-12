@@ -1,3 +1,4 @@
+import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 import fileupload from "express-fileupload";
 import * as mongoose from "mongoose";
@@ -12,12 +13,38 @@ import { userRouter } from "./router/router";
 
 const app = express();
 
+app.use(
+  cors({
+    origin: "*", // дозволяємо всім робити запити на наш хост
+    //  origin: ["http://localhost:4200"], дозволено лише з даного хост фронт енду робити запити до нас на бек
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    // які дозволені HTTP методи
+    allowedHeaders: [
+      "Authorization",
+      "Content-Type",
+      "Origin",
+      "Access-Control-Allow-Origin",
+    ], // аголовки, які дозволені для запитів
+    preflightContinue: false,
+    // preflightContinue вказуємо, чи треба застосувати preflight запити (попереднє перевірення)
+    // credentials: true, дозволяємо використовувати авторизацію для попереднього перевірення
+    optionsSuccessStatus: 200,
+    // код статусу, який буде відправлено при успішному preflight запиті
+  }),
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileupload());
 // перевіряє на наявність файлів, якщо файли є,
 // то в нашому req зявляється спеціальне поле files
 // і потім по ключу ми зможемо втягувати ці файли
+//
+// app.use(rateLimit({ windowMs: 2 * 60 * 1000, limit: 5 }));
+// ліміт запитів від одного IP адреса,
+// загальний для всіх ендпоінтів /users1/ , /auth/ та інших,
+// всіх що прописані в index.ts
+//
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // підключаємо swagger
 app.use("/auth", authRouter);
