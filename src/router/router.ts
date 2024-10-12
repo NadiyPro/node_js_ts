@@ -23,7 +23,7 @@ router.get(
   "/me",
   rateLimit({ windowMs: 5 * 60 * 1000, limit: 5 }),
   // вкажемо що для одного IP адреса можна здійснити
-  // максимум 5 запитів за 2 хвилини
+  // максимум 5 запитів за 5 хвилини
   authMiddleware.checkAccessToken,
   userController.getMe,
 );
