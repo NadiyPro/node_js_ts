@@ -10,6 +10,8 @@
     "removeComments": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   }
 }
